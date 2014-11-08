@@ -26,8 +26,8 @@ public class Client {
             Registry reg = LocateRegistry.getRegistry("127.0.0.1", 1099);
             RemoteInterface rmi = (RemoteInterface) reg.lookup("server");
             System.out.println("Connected to server");
-            String txt = rmi.getData("Yoan");
-            System.out.println(txt);
+//            String txt = rmi.getData("Yoan");
+//            System.out.println(txt);
         }catch(Exception ex){
             System.out.println(ex);
         }
