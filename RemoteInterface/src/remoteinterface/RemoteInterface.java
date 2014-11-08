@@ -14,5 +14,5 @@ import java.rmi.RemoteException;
  * @author Riyadi Efendi Sembel, Yoan Pratama Putra, Ritos Penyawang, Andreas Budiman
  */
 public interface RemoteInterface extends Remote {
-    public String getData(String txt) throws RemoteException;
+    public void setData(String txt) throws RemoteException;
 }
