@@ -6,29 +6,48 @@
 
 package fridge;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 /**
  *
  * @author Yoan Pratama Putra
  */
-public class Main extends javax.swing.JFrame {
+public class Main extends javax.swing.JFrame implements Runnable {
 
     /**
      * Creates new form Main
      */
-    private String text;
     private Fridge server;
-    public static String xxx;
+    public static int temperature;
+    public static Thread tempThread;
     
-    public void set_text(String a) {
-        this.text = a;
+    private void changeTemperature() {
+        jTextField1.setText(Integer.toString(temperature));
+    }
+    
+    private int i = 0;
+    public void run() {
+        Timer timer = new Timer();
+        TimerTask task = new TimerTask() {
+            public void run() {
+                changeTemperature();
+                System.out.println(i + "\n");
+                i++;
+            }
+        };
+        timer.scheduleAtFixedRate(task, 1000, 1000);
     }
     
     public Main() {
         initComponents();
-        text = null;
-        server = null;
-        xxx = null;
+        this.temperature = 0;
         this.setTitle("Fridge");
+        try {
+            server = new Fridge();
+        } catch(Exception ex) {
+            System.out.println("Server: " + ex);
+        }
     }
 
     /**
@@ -50,6 +69,7 @@ public class Main extends javax.swing.JFrame {
 
         jTextField1.setEditable(false);
         jTextField1.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        jTextField1.setText("5");
 
         jButton2.setText("Refresh");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -110,8 +130,7 @@ public class Main extends javax.swing.JFrame {
     
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // Check update
-//        this.jTextField1.setText(server.getData());
-        this.jTextField1.setText(xxx);
+        this.jTextField1.setText(Integer.toString(this.temperature));
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
@@ -119,11 +138,11 @@ public class Main extends javax.swing.JFrame {
         try {
             if(this.jToggleButton1.getText().equals("Turn on")) {
                 // Connecting to RMI
-                server = new Fridge();
                 server.start();
                 this.setTitle("Fridge [" + server.getStatus() + "]");
                 this.jToggleButton1.setText("Turn off");
             } else {
+                server.stop();
                 this.setTitle("Fridge");
                 this.jToggleButton1.setText("Turn on");
             }
@@ -166,6 +185,10 @@ public class Main extends javax.swing.JFrame {
                 new Main().setVisible(true);
             }
         });
+        
+        // initialize and start temperature thread
+        tempThread = new Thread(new Main());
+        tempThread.start();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

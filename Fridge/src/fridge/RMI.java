@@ -14,5 +14,6 @@ import java.rmi.RemoteException;
  * @author Yoan Pratama Putra
  */
 public interface RMI extends Remote {
-    public void setData(String txt) throws RemoteException;
+    public void setTemperature(int temp) throws RemoteException;
+    public int getTemperature() throws RemoteException;
 }

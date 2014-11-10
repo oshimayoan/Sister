@@ -18,6 +18,8 @@ import java.rmi.server.UnicastRemoteObject;
 public class Fridge extends UnicastRemoteObject implements RMI {
 
     private static String status = null;
+    private Registry reg;
+    
     public String getStatus() {
         return status;
     }
@@ -28,32 +30,33 @@ public class Fridge extends UnicastRemoteObject implements RMI {
     
     public void start() {
         try {
-            Registry reg = LocateRegistry.createRegistry(1099);
+            reg = LocateRegistry.createRegistry(1099);
             reg.rebind("server", new Fridge());
-            status = "Started";
+            this.status = "Started";
         } catch(Exception ex) {
-            System.out.println(ex);
+            System.out.println("new : " + ex);
         }
     }
     
     public void stop(){
         try {
-            
+            UnicastRemoteObject.unexportObject(reg, true);
+            reg.unbind("server");
+            this.status = null;
         } catch(Exception ex) {
             System.out.println(ex);
         }
     }
-    
-    private static String data = null;
-    public String getData() {
-        return data;
+
+    @Override
+    public void setTemperature(int temp) throws RemoteException {
+        System.out.println(temp);
+        Main.temperature = temp;
     }
 
     @Override
-    public void setData(String txt) throws RemoteException {
-        System.out.println(txt);
-        this.data = txt;
-        Main.xxx = txt;
+    public int getTemperature() throws RemoteException {
+        return 5;
     }
     
 }
