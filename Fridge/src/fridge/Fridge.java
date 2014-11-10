@@ -10,13 +10,12 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
-import remoteinterface.RemoteInterface;
 
 /**
  *
  * @author Yoan Pratama Putra
  */
-public class Fridge extends UnicastRemoteObject implements RemoteInterface{
+public class Fridge extends UnicastRemoteObject implements RMI {
 
     private static String status = null;
     public String getStatus() {

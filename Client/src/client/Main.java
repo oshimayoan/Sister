@@ -6,9 +6,9 @@
 
 package client;
 
+import fridge.RMI;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import remoteinterface.RemoteInterface;
 
 /**
  *
@@ -19,7 +19,7 @@ public class Main extends javax.swing.JFrame {
     /**
      * Creates new form Main
      */
-    private RemoteInterface rmi = null;
+    private RMI rmi = null;
     
     public Main() {
         initComponents();
@@ -30,7 +30,7 @@ public class Main extends javax.swing.JFrame {
     public void ConnectServer() {
         try {
             Registry reg = LocateRegistry.getRegistry("127.0.0.1", 1099);
-            rmi = (RemoteInterface) reg.lookup("server");
+            rmi = (RMI) reg.lookup("server");
             this.setTitle("Connected");
         } catch(Exception ex) {
             System.out.println(ex);
