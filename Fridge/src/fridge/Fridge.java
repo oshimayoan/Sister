@@ -53,6 +53,7 @@ public class Fridge extends UnicastRemoteObject implements RMI {
     public void setData(String txt) throws RemoteException {
         System.out.println(txt);
         this.data = txt;
+        Main.xxx = txt;
     }
     
 }
