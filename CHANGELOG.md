@@ -5,6 +5,7 @@
         <li>Fixing fridge turn on/off</li>
         <li>Adding temperature thread</li>
         <li>LIttle change to client UI</li>
+        <li>Fixing temperature auto-refresh</li>
     </ul>
 </div>
 <div>
