@@ -1,13 +1,21 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright (C) 2014 Yoan Pratama Putra
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package fridge;
-
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  *
@@ -22,15 +30,19 @@ public class Main extends javax.swing.JFrame{
     public static int temperature;
     public static Thread tempThread;
     
+    // ubah suhu
     public static void changeTemperature() {
-        jTextField1.setText(Integer.toString(temperature));
+        txtTemperature.setValue(temperature);
     }
     
-    private int i = 0;
+    // ambil suhu untuk client
+    public static int getTemperature() {
+        return Integer.parseInt(txtTemperature.getValue().toString());
+    }
     
     public Main() {
         initComponents();
-        this.temperature = 0;
+        temperature = 0;
         this.setTitle("Fridge");
         try {
             server = new Fridge();
@@ -48,33 +60,36 @@ public class Main extends javax.swing.JFrame{
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jTextField1 = new javax.swing.JTextField();
-        jButton2 = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jToggleButton1 = new javax.swing.JToggleButton();
+        btnRefresh = new javax.swing.JButton();
+        lblTemperature = new javax.swing.JLabel();
+        lblCelcius = new javax.swing.JLabel();
+        btnSwitch = new javax.swing.JToggleButton();
+        txtTemperature = new javax.swing.JSpinner();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jTextField1.setEditable(false);
-        jTextField1.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        jTextField1.setText("5");
-
-        jButton2.setText("Refresh");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        btnRefresh.setText("Refresh");
+        btnRefresh.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                btnRefreshActionPerformed(evt);
             }
         });
 
-        jLabel1.setText("Temperature");
+        lblTemperature.setText("Temperature");
 
-        jLabel2.setText("°C");
+        lblCelcius.setText("°C");
 
-        jToggleButton1.setText("Turn on");
-        jToggleButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnSwitch.setText("Turn on");
+        btnSwitch.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jToggleButton1ActionPerformed(evt);
+                btnSwitchActionPerformed(evt);
+            }
+        });
+
+        txtTemperature.setModel(new javax.swing.SpinnerNumberModel(0, -100, 100, 1));
+        txtTemperature.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                txtTemperatureStateChanged(evt);
             }
         });
 
@@ -87,15 +102,15 @@ public class Main extends javax.swing.JFrame{
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(0, 233, Short.MAX_VALUE)
-                        .addComponent(jToggleButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnSwitch, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton2))
+                        .addComponent(btnRefresh))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
+                        .addComponent(lblTemperature)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtTemperature, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel2)
+                        .addComponent(lblCelcius)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -104,43 +119,48 @@ public class Main extends javax.swing.JFrame{
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2))
+                    .addComponent(lblTemperature)
+                    .addComponent(lblCelcius)
+                    .addComponent(txtTemperature, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 235, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2)
-                    .addComponent(jToggleButton1))
+                    .addComponent(btnRefresh)
+                    .addComponent(btnSwitch))
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
     
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // Check update
-        this.jTextField1.setText(Integer.toString(this.temperature));
-    }//GEN-LAST:event_jButton2ActionPerformed
+    private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
+        // cek perubahan
+        txtTemperature.setValue(temperature);
+    }//GEN-LAST:event_btnRefreshActionPerformed
 
     
-    private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
+    private void btnSwitchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSwitchActionPerformed
         // Turning on fridge server
         try {
-            if(this.jToggleButton1.getText().equals("Turn on")) {
-                // Connecting to RMI
+            if(this.btnSwitch.getText().equals("Turn on")) {
+                // mejalankan RMI
                 server.start();
                 this.setTitle("Fridge [" + server.getStatus() + "]");
-                this.jToggleButton1.setText("Turn off");
+                this.btnSwitch.setText("Turn off");
             } else {
+                // menghentikan RMI
                 server.stop();
                 this.setTitle("Fridge");
-                this.jToggleButton1.setText("Turn on");
+                this.btnSwitch.setText("Turn on");
             }
         } catch(Exception ex) {
             System.out.println("Failed: " + ex);
-            this.jToggleButton1.setSelected(false);
+            this.btnSwitch.setSelected(false);
         }
-    }//GEN-LAST:event_jToggleButton1ActionPerformed
+    }//GEN-LAST:event_btnSwitchActionPerformed
+
+    private void txtTemperatureStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_txtTemperatureStateChanged
+        temperature = Integer.parseInt(txtTemperature.getValue().toString());
+    }//GEN-LAST:event_txtTemperatureStateChanged
 
     /**
      * @param args the command line arguments
@@ -173,18 +193,20 @@ public class Main extends javax.swing.JFrame{
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new Main().setVisible(true);
+                
+                // buat dan jalankan thread suhu
+                temperatureThread tempThread = new temperatureThread();
+                tempThread.start();
             }
         });
-        UpdateThread updateThread=new UpdateThread();
-        updateThread.start();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton2;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private static javax.swing.JTextField jTextField1;
-    private javax.swing.JToggleButton jToggleButton1;
+    private javax.swing.JButton btnRefresh;
+    private javax.swing.JToggleButton btnSwitch;
+    private javax.swing.JLabel lblCelcius;
+    private javax.swing.JLabel lblTemperature;
+    private static javax.swing.JSpinner txtTemperature;
     // End of variables declaration//GEN-END:variables
 
 }

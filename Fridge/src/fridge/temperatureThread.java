@@ -17,14 +17,20 @@
 
 package fridge;
 
-import java.rmi.Remote;
-import java.rmi.RemoteException;
-
 /**
  *
  * @author Yoan Pratama Putra
  */
-public interface RMI extends Remote {
-    public void setTemperature(int temp) throws RemoteException;
-    public int getTemperature() throws RemoteException;
+public class temperatureThread extends Thread {
+    public void run() {
+        while(true) {
+            try {
+                // refresh nilai temperature setiap 1 detik
+                Main.changeTemperature();
+                sleep(1000);
+            } catch(Exception ex) {
+                System.out.println(ex);
+            }
+        }
+    }
 }

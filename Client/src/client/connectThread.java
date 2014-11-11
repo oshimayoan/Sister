@@ -15,16 +15,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package fridge;
-
-import java.rmi.Remote;
-import java.rmi.RemoteException;
+package client;
 
 /**
  *
  * @author Yoan Pratama Putra
  */
-public interface RMI extends Remote {
-    public void setTemperature(int temp) throws RemoteException;
-    public int getTemperature() throws RemoteException;
+public class connectThread extends Thread {
+    public void run() {
+        while(true) {
+            try {
+                // cek konektivitas ke kulkas
+                Main.ConnectServer();
+                sleep(1000);
+            } catch(Exception ex) {
+                System.out.println(ex);
+            }
+        }
+    }
 }
