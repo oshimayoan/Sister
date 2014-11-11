@@ -1,11 +1,15 @@
 <div>
     <span><strong>1.0.0</strong> <i>(November 11, 2014)</i></span>
     <ul>
-        <li>Fixing temperature datatype</li>
-        <li>Fixing fridge turn on/off</li>
-        <li>Adding temperature thread</li>
+        <li>Fix temperature datatype</li>
+        <li>Fix fridge turn on/off</li>
+        <li>Add temperature thread</li>
         <li>Little change to client UI</li>
-        <li>Fixing temperature auto-refresh</li>
+        <li>Fix temperature auto-refresh</li>
+        <li>Fix client connection</li>
+        <li>Add connectThread to client</li>
+        <li>Add temperatureThread to fridge</li>
+        <li>Change UI jTextField to jSpinner</li>
     </ul>
 </div>
 <div>
@@ -13,6 +17,6 @@
     <ul>
         <li>Mix RMI interface with Fridge</li>
         <li>Little change to fridge UI</li>
-        <li>Adding temperature changer in client and fridge</li>
+        <li>Add temperature changer in client and fridge</li>
     </ul>
 </div>
