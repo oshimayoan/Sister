@@ -13,7 +13,7 @@ import java.util.TimerTask;
  *
  * @author Yoan Pratama Putra
  */
-public class Main extends javax.swing.JFrame implements Runnable {
+public class Main extends javax.swing.JFrame{
 
     /**
      * Creates new form Main
@@ -22,22 +22,11 @@ public class Main extends javax.swing.JFrame implements Runnable {
     public static int temperature;
     public static Thread tempThread;
     
-    private void changeTemperature() {
+    public static void changeTemperature() {
         jTextField1.setText(Integer.toString(temperature));
     }
     
     private int i = 0;
-    public void run() {
-        Timer timer = new Timer();
-        TimerTask task = new TimerTask() {
-            public void run() {
-                changeTemperature();
-                System.out.println(i + "\n");
-                i++;
-            }
-        };
-        timer.scheduleAtFixedRate(task, 1000, 1000);
-    }
     
     public Main() {
         initComponents();
@@ -133,6 +122,7 @@ public class Main extends javax.swing.JFrame implements Runnable {
         this.jTextField1.setText(Integer.toString(this.temperature));
     }//GEN-LAST:event_jButton2ActionPerformed
 
+    
     private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
         // Turning on fridge server
         try {
@@ -185,17 +175,15 @@ public class Main extends javax.swing.JFrame implements Runnable {
                 new Main().setVisible(true);
             }
         });
-        
-        // initialize and start temperature thread
-        tempThread = new Thread(new Main());
-        tempThread.start();
+        UpdateThread updateThread=new UpdateThread();
+        updateThread.start();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JTextField jTextField1;
+    private static javax.swing.JTextField jTextField1;
     private javax.swing.JToggleButton jToggleButton1;
     // End of variables declaration//GEN-END:variables
 
