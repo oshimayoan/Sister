@@ -3,7 +3,6 @@
     <ul>
         <li>Fix temperature datatype</li>
         <li>Fix fridge turn on/off</li>
-        <li>Add temperature thread</li>
         <li>Little change to client UI</li>
         <li>Fix temperature auto-refresh</li>
         <li>Fix client connection</li>
