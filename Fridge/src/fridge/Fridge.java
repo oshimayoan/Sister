@@ -43,7 +43,7 @@ public class Fridge extends UnicastRemoteObject implements RMI {
         try {
             reg = LocateRegistry.createRegistry(1099);
             reg.rebind("server", new Fridge());
-            this.status = "Started";
+            this.status = "Running";
         } catch(Exception ex) {
             System.out.println("new : " + ex);
         }

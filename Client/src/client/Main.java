@@ -54,7 +54,7 @@ public class Main extends javax.swing.JFrame {
                 // ambil suhu kulkas saat ini
                 temperature = rmi.getTemperature();
                 txtTemperature.setValue(temperature);
-                connectFlag += 1;
+                connectFlag++;
             }
         } catch(Exception ex) {
             // ubah status menjadi not connected
@@ -82,13 +82,14 @@ public class Main extends javax.swing.JFrame {
 
         btnChange = new javax.swing.JButton();
         lblCelcius = new javax.swing.JLabel();
-        lblTemperature = new javax.swing.JLabel();
         txtTemperature = new javax.swing.JSpinner();
         jPanel1 = new javax.swing.JPanel();
         lblConnectStatus = new javax.swing.JLabel();
+        btnRefreshTemp = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        btnChange.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         btnChange.setText("Change");
         btnChange.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -96,17 +97,18 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
+        lblCelcius.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         lblCelcius.setText("°C");
 
-        lblTemperature.setText("Temperature");
-
-        txtTemperature.setModel(new javax.swing.SpinnerNumberModel(0, -100, 100, 1));
+        txtTemperature.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        txtTemperature.setModel(new javax.swing.SpinnerNumberModel(4, -20, 4, 1));
         txtTemperature.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 txtTemperatureStateChanged(evt);
             }
         });
 
+        lblConnectStatus.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         lblConnectStatus.setText("Not Connected");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -123,13 +125,21 @@ public class Main extends javax.swing.JFrame {
             .addComponent(lblConnectStatus, javax.swing.GroupLayout.DEFAULT_SIZE, 20, Short.MAX_VALUE)
         );
 
+        btnRefreshTemp.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        btnRefreshTemp.setText("Refresh");
+        btnRefreshTemp.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRefreshTempActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(184, Short.MAX_VALUE)
-                .addComponent(lblTemperature)
+                .addContainerGap(157, Short.MAX_VALUE)
+                .addComponent(btnRefreshTemp)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtTemperature, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -146,8 +156,8 @@ public class Main extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnChange)
                     .addComponent(lblCelcius)
-                    .addComponent(lblTemperature)
-                    .addComponent(txtTemperature, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtTemperature, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnRefreshTemp))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 246, Short.MAX_VALUE)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -173,6 +183,16 @@ public class Main extends javax.swing.JFrame {
         // mengubah suhu
         temperature = Integer.parseInt(txtTemperature.getValue().toString());
     }//GEN-LAST:event_txtTemperatureStateChanged
+
+    private void btnRefreshTempActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshTempActionPerformed
+        // refresh suhu dari kulkas
+        try {
+            temperature = rmi.getTemperature();
+            txtTemperature.setValue(temperature);
+        } catch(Exception ex) {
+            System.out.println(ex);
+        }
+    }//GEN-LAST:event_btnRefreshTempActionPerformed
 
     /**
      * @param args the command line arguments
@@ -215,10 +235,10 @@ public class Main extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnChange;
+    private javax.swing.JButton btnRefreshTemp;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lblCelcius;
     private static javax.swing.JLabel lblConnectStatus;
-    private javax.swing.JLabel lblTemperature;
     private static javax.swing.JSpinner txtTemperature;
     // End of variables declaration//GEN-END:variables
 }

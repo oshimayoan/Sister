@@ -32,17 +32,17 @@ public class Main extends javax.swing.JFrame{
     
     // ubah suhu
     public static void changeTemperature() {
-        txtTemperature.setValue(temperature);
+        txtTemperature.setText(Integer.toString(temperature));
     }
     
     // ambil suhu untuk client
     public static int getTemperature() {
-        return Integer.parseInt(txtTemperature.getValue().toString());
+        return Integer.parseInt(txtTemperature.getText());
     }
     
     public Main() {
         initComponents();
-        temperature = 0;
+        temperature = 4;
         this.setTitle("Fridge");
         try {
             server = new Fridge();
@@ -60,25 +60,18 @@ public class Main extends javax.swing.JFrame{
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        btnRefresh = new javax.swing.JButton();
-        lblTemperature = new javax.swing.JLabel();
         lblCelcius = new javax.swing.JLabel();
         btnSwitch = new javax.swing.JToggleButton();
-        txtTemperature = new javax.swing.JSpinner();
+        btnTempMin = new javax.swing.JButton();
+        txtTemperature = new javax.swing.JLabel();
+        btnTempMax = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        btnRefresh.setText("Refresh");
-        btnRefresh.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnRefreshActionPerformed(evt);
-            }
-        });
-
-        lblTemperature.setText("Temperature");
-
+        lblCelcius.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         lblCelcius.setText("°C");
 
+        btnSwitch.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         btnSwitch.setText("Turn on");
         btnSwitch.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -86,10 +79,25 @@ public class Main extends javax.swing.JFrame{
             }
         });
 
-        txtTemperature.setModel(new javax.swing.SpinnerNumberModel(0, -100, 100, 1));
-        txtTemperature.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                txtTemperatureStateChanged(evt);
+        btnTempMin.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        btnTempMin.setText("-");
+        btnTempMin.setEnabled(false);
+        btnTempMin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTempMinActionPerformed(evt);
+            }
+        });
+
+        txtTemperature.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        txtTemperature.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        txtTemperature.setText("4");
+
+        btnTempMax.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        btnTempMax.setText("+");
+        btnTempMax.setEnabled(false);
+        btnTempMax.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTempMaxActionPerformed(evt);
             }
         });
 
@@ -99,19 +107,15 @@ public class Main extends javax.swing.JFrame{
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(0, 233, Short.MAX_VALUE)
-                        .addComponent(btnSwitch, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnRefresh))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(lblTemperature)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtTemperature, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lblCelcius)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addComponent(btnSwitch)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 179, Short.MAX_VALUE)
+                .addComponent(txtTemperature, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblCelcius)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnTempMin)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnTempMax)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -119,38 +123,34 @@ public class Main extends javax.swing.JFrame{
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblTemperature)
                     .addComponent(lblCelcius)
-                    .addComponent(txtTemperature, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 235, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnRefresh)
+                    .addComponent(btnTempMin)
+                    .addComponent(txtTemperature)
+                    .addComponent(btnTempMax)
                     .addComponent(btnSwitch))
-                .addContainerGap())
+                .addContainerGap(306, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
     
-    private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
-        // cek perubahan
-        txtTemperature.setValue(temperature);
-    }//GEN-LAST:event_btnRefreshActionPerformed
-
     
     private void btnSwitchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSwitchActionPerformed
-        // Turning on fridge server
         try {
             if(this.btnSwitch.getText().equals("Turn on")) {
-                // mejalankan RMI
+                // menghidupkan kulkas dan menjalankan RMI
                 server.start();
                 this.setTitle("Fridge [" + server.getStatus() + "]");
                 this.btnSwitch.setText("Turn off");
+                this.btnTempMin.setEnabled(true);
+                this.btnTempMax.setEnabled(true);
             } else {
-                // menghentikan RMI
+                // mematikan kulkas dan menghentikan RMI
                 server.stop();
                 this.setTitle("Fridge");
                 this.btnSwitch.setText("Turn on");
+                this.btnTempMin.setEnabled(false);
+                this.btnTempMax.setEnabled(false);
             }
         } catch(Exception ex) {
             System.out.println("Failed: " + ex);
@@ -158,9 +158,23 @@ public class Main extends javax.swing.JFrame{
         }
     }//GEN-LAST:event_btnSwitchActionPerformed
 
-    private void txtTemperatureStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_txtTemperatureStateChanged
-        temperature = Integer.parseInt(txtTemperature.getValue().toString());
-    }//GEN-LAST:event_txtTemperatureStateChanged
+    private void btnTempMinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTempMinActionPerformed
+        // cek apakah suhu > -20
+        if(temperature > -20) {
+            // kurangi suhu
+            temperature--;
+            txtTemperature.setText(Integer.toString(temperature));
+        }
+    }//GEN-LAST:event_btnTempMinActionPerformed
+
+    private void btnTempMaxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTempMaxActionPerformed
+        // cek apakah suhu < 4
+        if(temperature < 4) {
+            // tambah suhu
+            temperature++;
+            txtTemperature.setText(Integer.toString(temperature));
+        }
+    }//GEN-LAST:event_btnTempMaxActionPerformed
 
     /**
      * @param args the command line arguments
@@ -202,11 +216,11 @@ public class Main extends javax.swing.JFrame{
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnRefresh;
     private javax.swing.JToggleButton btnSwitch;
+    private javax.swing.JButton btnTempMax;
+    private javax.swing.JButton btnTempMin;
     private javax.swing.JLabel lblCelcius;
-    private javax.swing.JLabel lblTemperature;
-    private static javax.swing.JSpinner txtTemperature;
+    private static javax.swing.JLabel txtTemperature;
     // End of variables declaration//GEN-END:variables
 
 }
