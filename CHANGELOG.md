@@ -1,4 +1,15 @@
 <div>
+    <span><strong>1.0.0</strong> <i>(November 18, 2014)</i></span>
+    <ul>
+        <li>Fridge UI change</li>
+        <li>Add MySQL JDBC Connector</li>
+        <li>Add MySQL class</li>
+        <li>Add connect and close method on MySQL</li>
+        <li>Add Temperature class</li>
+        <li>Add getTemp method on Temperature</li>
+    </ul>
+</div>
+<div>
     <span><strong>1.0.0</strong> <i>(November 17, 2014)</i></span>
     <ul>
         <li>Create database</li>
