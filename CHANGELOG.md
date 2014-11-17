@@ -3,9 +3,9 @@
     <ul>
         <li>Fridge UI change</li>
         <li>Add MySQL JDBC Connector</li>
-        <li>Add MySQL class</li>
+        <li>Create MySQL class</li>
         <li>Add connect and close method on MySQL</li>
-        <li>Add Temperature class</li>
+        <li>Create Temperature class</li>
         <li>Add getTemp method on Temperature</li>
     </ul>
 </div>
