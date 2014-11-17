@@ -1,4 +1,10 @@
 <div>
+    <span><strong>1.0.0</strong> <i>(November 17, 2014)</i></span>
+    <ul>
+        <li>Create database</li>
+    </ul>
+</div>
+<div>
     <span><strong>1.0.0</strong> <i>(November 13, 2014)</i></span>
     <ul>
         <li>Change UI jSpinner to jLabel and jButton for fridge's temperature</li>
