@@ -28,21 +28,22 @@ public class Main extends javax.swing.JFrame{
      */
     private Fridge server;
     public static int temperature;
+    public static int freezerTemp;
     public static Thread tempThread;
     
     // ubah suhu
     public static void changeTemperature() {
-        txtTemperature.setText(Integer.toString(temperature));
+        lblTemperature.setText(Integer.toString(temperature));
+        lblFreezer.setText(Integer.toString(freezerTemp));
     }
     
     // ambil suhu untuk client
     public static int getTemperature() {
-        return Integer.parseInt(txtTemperature.getText());
+        return Integer.parseInt(lblTemperature.getText());
     }
     
     public Main() {
         initComponents();
-        temperature = 4;
         this.setTitle("Fridge");
         try {
             server = new Fridge();
@@ -63,10 +64,20 @@ public class Main extends javax.swing.JFrame{
         lblCelcius = new javax.swing.JLabel();
         btnSwitch = new javax.swing.JToggleButton();
         btnTempMin = new javax.swing.JButton();
-        txtTemperature = new javax.swing.JLabel();
+        lblTemperature = new javax.swing.JLabel();
         btnTempMax = new javax.swing.JButton();
+        lblFridgeTemperature = new javax.swing.JLabel();
+        btnFreezerMax = new javax.swing.JButton();
+        btnFreezerMin = new javax.swing.JButton();
+        lblCelcius2 = new javax.swing.JLabel();
+        lblFreezer = new javax.swing.JLabel();
+        lblFreezerTemperature = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setMaximumSize(new java.awt.Dimension(600, 600));
+        setMinimumSize(new java.awt.Dimension(600, 600));
+        setPreferredSize(new java.awt.Dimension(600, 600));
+        setResizable(false);
 
         lblCelcius.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         lblCelcius.setText("°C");
@@ -88,9 +99,9 @@ public class Main extends javax.swing.JFrame{
             }
         });
 
-        txtTemperature.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        txtTemperature.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        txtTemperature.setText("4");
+        lblTemperature.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        lblTemperature.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblTemperature.setText("0");
 
         btnTempMax.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         btnTempMax.setText("+");
@@ -101,21 +112,59 @@ public class Main extends javax.swing.JFrame{
             }
         });
 
+        lblFridgeTemperature.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        lblFridgeTemperature.setText("Fridge :");
+
+        btnFreezerMax.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        btnFreezerMax.setText("+");
+        btnFreezerMax.setEnabled(false);
+
+        btnFreezerMin.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        btnFreezerMin.setText("-");
+        btnFreezerMin.setEnabled(false);
+
+        lblCelcius2.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        lblCelcius2.setText("°C");
+
+        lblFreezer.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        lblFreezer.setText("0");
+
+        lblFreezerTemperature.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        lblFreezerTemperature.setText("Freezer :");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(btnSwitch)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 179, Short.MAX_VALUE)
-                .addComponent(txtTemperature, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(btnSwitch)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lblFridgeTemperature))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(398, 398, 398)
+                        .addComponent(lblFreezerTemperature)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblTemperature, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblCelcius))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(33, 33, 33)
+                        .addComponent(lblFreezer)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblCelcius2)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblCelcius)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnTempMin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnFreezerMin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnTempMin)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnTempMax)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnFreezerMax, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnTempMax, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -125,10 +174,18 @@ public class Main extends javax.swing.JFrame{
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblCelcius)
                     .addComponent(btnTempMin)
-                    .addComponent(txtTemperature)
+                    .addComponent(lblTemperature)
                     .addComponent(btnTempMax)
-                    .addComponent(btnSwitch))
-                .addContainerGap(306, Short.MAX_VALUE))
+                    .addComponent(btnSwitch)
+                    .addComponent(lblFridgeTemperature))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnFreezerMax)
+                    .addComponent(btnFreezerMin)
+                    .addComponent(lblCelcius2)
+                    .addComponent(lblFreezer)
+                    .addComponent(lblFreezerTemperature))
+                .addContainerGap(537, Short.MAX_VALUE))
         );
 
         pack();
@@ -140,10 +197,17 @@ public class Main extends javax.swing.JFrame{
             if(this.btnSwitch.getText().equals("Turn on")) {
                 // menghidupkan kulkas dan menjalankan RMI
                 server.start();
+                
+                // ambil nilai suhu dari database
+                Temperature temp = new Temperature();
+                temperature = temp.getTemp();
+                
                 this.setTitle("Fridge [" + server.getStatus() + "]");
                 this.btnSwitch.setText("Turn off");
                 this.btnTempMin.setEnabled(true);
                 this.btnTempMax.setEnabled(true);
+                this.btnFreezerMin.setEnabled(true);
+                this.btnFreezerMax.setEnabled(true);
             } else {
                 // mematikan kulkas dan menghentikan RMI
                 server.stop();
@@ -151,6 +215,8 @@ public class Main extends javax.swing.JFrame{
                 this.btnSwitch.setText("Turn on");
                 this.btnTempMin.setEnabled(false);
                 this.btnTempMax.setEnabled(false);
+                this.btnFreezerMin.setEnabled(false);
+                this.btnFreezerMax.setEnabled(false);
             }
         } catch(Exception ex) {
             System.out.println("Failed: " + ex);
@@ -160,19 +226,19 @@ public class Main extends javax.swing.JFrame{
 
     private void btnTempMinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTempMinActionPerformed
         // cek apakah suhu > -20
-        if(temperature > -20) {
+        if(temperature > 1) {
             // kurangi suhu
             temperature--;
-            txtTemperature.setText(Integer.toString(temperature));
+            lblTemperature.setText(Integer.toString(temperature));
         }
     }//GEN-LAST:event_btnTempMinActionPerformed
 
     private void btnTempMaxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTempMaxActionPerformed
         // cek apakah suhu < 4
-        if(temperature < 4) {
+        if(temperature < 6) {
             // tambah suhu
             temperature++;
-            txtTemperature.setText(Integer.toString(temperature));
+            lblTemperature.setText(Integer.toString(temperature));
         }
     }//GEN-LAST:event_btnTempMaxActionPerformed
 
@@ -216,11 +282,17 @@ public class Main extends javax.swing.JFrame{
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnFreezerMax;
+    private javax.swing.JButton btnFreezerMin;
     private javax.swing.JToggleButton btnSwitch;
     private javax.swing.JButton btnTempMax;
     private javax.swing.JButton btnTempMin;
     private javax.swing.JLabel lblCelcius;
-    private static javax.swing.JLabel txtTemperature;
+    private javax.swing.JLabel lblCelcius2;
+    private static javax.swing.JLabel lblFreezer;
+    private javax.swing.JLabel lblFreezerTemperature;
+    private javax.swing.JLabel lblFridgeTemperature;
+    private static javax.swing.JLabel lblTemperature;
     // End of variables declaration//GEN-END:variables
 
 }

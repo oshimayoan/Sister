@@ -83,9 +83,8 @@ public class Main extends javax.swing.JFrame {
         btnChange = new javax.swing.JButton();
         lblCelcius = new javax.swing.JLabel();
         txtTemperature = new javax.swing.JSpinner();
-        jPanel1 = new javax.swing.JPanel();
-        lblConnectStatus = new javax.swing.JLabel();
         btnRefreshTemp = new javax.swing.JButton();
+        lblConnectStatus = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -108,23 +107,6 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
-        lblConnectStatus.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        lblConnectStatus.setText("Not Connected");
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(lblConnectStatus)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(lblConnectStatus, javax.swing.GroupLayout.DEFAULT_SIZE, 20, Short.MAX_VALUE)
-        );
-
         btnRefreshTemp.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         btnRefreshTemp.setText("Refresh");
         btnRefreshTemp.addActionListener(new java.awt.event.ActionListener() {
@@ -132,6 +114,9 @@ public class Main extends javax.swing.JFrame {
                 btnRefreshTempActionPerformed(evt);
             }
         });
+
+        lblConnectStatus.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        lblConnectStatus.setText("Not Connected");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -147,7 +132,10 @@ public class Main extends javax.swing.JFrame {
                 .addGap(5, 5, 5)
                 .addComponent(btnChange)
                 .addContainerGap())
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lblConnectStatus)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -158,8 +146,9 @@ public class Main extends javax.swing.JFrame {
                     .addComponent(lblCelcius)
                     .addComponent(txtTemperature, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnRefreshTemp))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 246, Short.MAX_VALUE)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 240, Short.MAX_VALUE)
+                .addComponent(lblConnectStatus)
+                .addContainerGap())
         );
 
         pack();
@@ -236,7 +225,6 @@ public class Main extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnChange;
     private javax.swing.JButton btnRefreshTemp;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lblCelcius;
     private static javax.swing.JLabel lblConnectStatus;
     private static javax.swing.JSpinner txtTemperature;
