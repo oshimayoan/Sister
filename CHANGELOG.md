@@ -1,4 +1,18 @@
 <div>
+    <span><strong>1.0.0</strong> <i>(November 19, 2014)</i></span>
+    <ul>
+        <li>Update fridge UI</li>
+        <li>Create Item class</li>
+        <li>Add addItem method on Item</li>
+        <li>Add getItems method on Item</li>
+        <li>Create List class</li>
+        <li>Add setter and getter on List</li>
+        <li>Add refreshList method on fridge Main</li>
+        <li>Add removeItem method on Item</li>
+        <li>Create fridge add, remove, and view list item functionality</li>
+    </ul>
+</div>
+<div>
     <span><strong>1.0.0</strong> <i>(November 18, 2014)</i></span>
     <ul>
         <li>Fridge UI change</li>
