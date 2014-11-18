@@ -17,6 +17,11 @@
 
 package fridge;
 
+import java.awt.event.InputEvent;
+import java.rmi.RemoteException;
+import java.util.ArrayList;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Yoan Pratama Putra
@@ -31,6 +36,9 @@ public class Main extends javax.swing.JFrame{
     public static int freezerTemp;
     public static Thread tempThread;
     private Temperature tempClass;
+    private Item itemClass;
+    private DefaultTableModel tbl;
+    private ArrayList<List> itemList;
     
     // ubah suhu
     public static void changeTemperature() {
@@ -43,12 +51,32 @@ public class Main extends javax.swing.JFrame{
         return Integer.parseInt(lblTemperature.getText());
     }
     
+    // refresh list isi kulkas
+    private void refreshList() {
+        itemClass = new Item();
+        itemList = itemClass.getItems();
+                
+        // bersihkan row
+        int row = tbl.getRowCount();
+        for(int i = row - 1; i >= 0; i--)
+            tbl.removeRow(i);
+                
+        // tampilkan list isi kulkas
+        for(List l : itemList) {
+            Object[] o = new Object[2];
+            o[0] = l.getName();
+            o[1] = l.getQuantity();
+            tbl.addRow(o);
+        }
+    }
+    
     public Main() {
         initComponents();
         this.setTitle("Fridge");
         try {
             server = new Fridge();
-        } catch(Exception ex) {
+            tbl = (DefaultTableModel)tblItem.getModel();
+        } catch(RemoteException ex) {
             System.out.println("Server: " + ex);
         }
     }
@@ -73,6 +101,12 @@ public class Main extends javax.swing.JFrame{
         lblCelcius2 = new javax.swing.JLabel();
         lblFreezer = new javax.swing.JLabel();
         lblFreezerTemperature = new javax.swing.JLabel();
+        itmTelur = new javax.swing.JLabel();
+        itmApel = new javax.swing.JLabel();
+        itmJeruk = new javax.swing.JLabel();
+        itmSusu = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tblItem = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMaximumSize(new java.awt.Dimension(600, 600));
@@ -81,6 +115,7 @@ public class Main extends javax.swing.JFrame{
         setResizable(false);
 
         lblCelcius.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        lblCelcius.setLabelFor(lblTemperature);
         lblCelcius.setText("°C");
 
         btnSwitch.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
@@ -114,6 +149,7 @@ public class Main extends javax.swing.JFrame{
         });
 
         lblFridgeTemperature.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        lblFridgeTemperature.setLabelFor(lblTemperature);
         lblFridgeTemperature.setText("Fridge :");
 
         btnFreezerMax.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
@@ -135,6 +171,7 @@ public class Main extends javax.swing.JFrame{
         });
 
         lblCelcius2.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        lblCelcius2.setLabelFor(lblFreezer);
         lblCelcius2.setText("°C");
 
         lblFreezer.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
@@ -142,39 +179,135 @@ public class Main extends javax.swing.JFrame{
         lblFreezer.setText("0");
 
         lblFreezerTemperature.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        lblFreezerTemperature.setLabelFor(lblFreezer);
         lblFreezerTemperature.setText("Freezer :");
+
+        itmTelur.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
+        itmTelur.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        itmTelur.setText("Telur");
+        itmTelur.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        itmTelur.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        itmTelur.setEnabled(false);
+        itmTelur.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                itmTelurMouseClicked(evt);
+            }
+        });
+
+        itmApel.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
+        itmApel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        itmApel.setText("Apel");
+        itmApel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        itmApel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        itmApel.setEnabled(false);
+        itmApel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                itmApelMouseClicked(evt);
+            }
+        });
+
+        itmJeruk.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
+        itmJeruk.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        itmJeruk.setText("Jeruk");
+        itmJeruk.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        itmJeruk.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        itmJeruk.setEnabled(false);
+        itmJeruk.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                itmJerukMouseClicked(evt);
+            }
+        });
+
+        itmSusu.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
+        itmSusu.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        itmSusu.setText("Susu");
+        itmSusu.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        itmSusu.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        itmSusu.setEnabled(false);
+        itmSusu.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                itmSusuMouseClicked(evt);
+            }
+        });
+
+        tblItem.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        tblItem.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Name", "Quantity"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.Integer.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tblItem.setEnabled(false);
+        tblItem.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblItemMouseClicked(evt);
+            }
+        });
+        jScrollPane2.setViewportView(tblItem);
+        if (tblItem.getColumnModel().getColumnCount() > 0) {
+            tblItem.getColumnModel().getColumn(0).setMinWidth(250);
+            tblItem.getColumnModel().getColumn(0).setPreferredWidth(300);
+            tblItem.getColumnModel().getColumn(0).setMaxWidth(300);
+            tblItem.getColumnModel().getColumn(0).setCellRenderer(null);
+            tblItem.getColumnModel().getColumn(1).setMinWidth(100);
+        }
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(btnSwitch)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 326, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addComponent(lblFridgeTemperature))
-                    .addComponent(lblFreezerTemperature))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(lblTemperature, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lblCelcius))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(lblFreezer, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnSwitch)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 382, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(lblFridgeTemperature)
+                            .addComponent(lblFreezerTemperature))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lblCelcius2)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(btnTempMin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnFreezerMin))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(btnFreezerMax, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnTempMax))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(lblTemperature, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lblCelcius))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(lblFreezer, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lblCelcius2)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(btnTempMin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnFreezerMin))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(btnFreezerMax, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnTempMax)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(itmSusu, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(itmTelur, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(itmApel, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(itmJeruk, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -195,7 +328,19 @@ public class Main extends javax.swing.JFrame{
                     .addComponent(lblCelcius2)
                     .addComponent(lblFreezer)
                     .addComponent(lblFreezerTemperature))
-                .addContainerGap(537, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(itmTelur, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(itmApel, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(itmJeruk, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(itmSusu, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 222, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2))
+                .addContainerGap())
         );
 
         pack();
@@ -213,12 +358,20 @@ public class Main extends javax.swing.JFrame{
                 temperature = tempClass.getTemp();
                 freezerTemp = tempClass.getFreezer();
                 
+                // ambil list isi kulkas dari database
+                refreshList();
+                
                 this.setTitle("Fridge [" + server.getStatus() + "]");
                 this.btnSwitch.setText("Turn off");
                 this.btnTempMin.setEnabled(true);
                 this.btnTempMax.setEnabled(true);
                 this.btnFreezerMin.setEnabled(true);
                 this.btnFreezerMax.setEnabled(true);
+                this.tblItem.setEnabled(true);
+                this.itmTelur.setEnabled(true);
+                this.itmApel.setEnabled(true);
+                this.itmJeruk.setEnabled(true);
+                this.itmSusu.setEnabled(true);
             } else {
                 // mematikan kulkas dan menghentikan RMI
                 server.stop();
@@ -228,6 +381,11 @@ public class Main extends javax.swing.JFrame{
                 this.btnTempMax.setEnabled(false);
                 this.btnFreezerMin.setEnabled(false);
                 this.btnFreezerMax.setEnabled(false);
+                this.tblItem.setEnabled(false);
+                this.itmTelur.setEnabled(false);
+                this.itmApel.setEnabled(false);
+                this.itmJeruk.setEnabled(false);
+                this.itmSusu.setEnabled(false);
             }
         } catch(Exception ex) {
             System.out.println("Failed: " + ex);
@@ -282,6 +440,53 @@ public class Main extends javax.swing.JFrame{
             tempClass.setTemp(temperature, freezerTemp);
         }
     }//GEN-LAST:event_btnFreezerMinActionPerformed
+
+    private void itmTelurMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_itmTelurMouseClicked
+        // tambahkan telur ke dalam list isi kulkas
+        String itemName = itmTelur.getText();
+        itemClass.addItem(itemName);
+        
+        // refresh list isi kulkas
+        refreshList();
+    }//GEN-LAST:event_itmTelurMouseClicked
+
+    private void itmApelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_itmApelMouseClicked
+         // tambahkan apel ke dalam list isi kulkas
+        String itemName = itmApel.getText();
+        itemClass.addItem(itemName);
+        
+        // refresh list isi kulkas
+        refreshList();
+    }//GEN-LAST:event_itmApelMouseClicked
+
+    private void itmJerukMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_itmJerukMouseClicked
+        // tambahkan jeruk ke dalam list isi kulkas
+        String itemName = itmJeruk.getText();
+        itemClass.addItem(itemName);
+        
+        // refresh list isi kulkas
+        refreshList();
+    }//GEN-LAST:event_itmJerukMouseClicked
+
+    private void itmSusuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_itmSusuMouseClicked
+         // tambahkan susu ke dalam list isi kulkas
+        String itemName = itmSusu.getText();
+        itemClass.addItem(itemName);
+        
+        // refresh list isi kulkas
+        refreshList();
+    }//GEN-LAST:event_itmSusuMouseClicked
+
+    private void tblItemMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblItemMouseClicked
+        // kurangi atau hapus barang yang diambil
+        if(evt.getClickCount() > 1 & evt.getModifiers() == InputEvent.BUTTON1_MASK) {
+            String itemName = tblItem.getValueAt(tblItem.getSelectedRow(), 0).toString();
+            itemClass.removeItem(itemName);
+            
+            // refresh list isi kulkas
+            refreshList();
+        }
+    }//GEN-LAST:event_tblItemMouseClicked
     
     /**
      * @param args the command line arguments
@@ -328,12 +533,18 @@ public class Main extends javax.swing.JFrame{
     private javax.swing.JToggleButton btnSwitch;
     private javax.swing.JButton btnTempMax;
     private javax.swing.JButton btnTempMin;
+    private javax.swing.JLabel itmApel;
+    private javax.swing.JLabel itmJeruk;
+    private javax.swing.JLabel itmSusu;
+    private javax.swing.JLabel itmTelur;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel lblCelcius;
     private javax.swing.JLabel lblCelcius2;
     private static javax.swing.JLabel lblFreezer;
     private javax.swing.JLabel lblFreezerTemperature;
     private javax.swing.JLabel lblFridgeTemperature;
     private static javax.swing.JLabel lblTemperature;
+    private javax.swing.JTable tblItem;
     // End of variables declaration//GEN-END:variables
 
 }
