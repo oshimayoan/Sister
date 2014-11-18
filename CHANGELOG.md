@@ -7,6 +7,9 @@
         <li>Add connect and close method on MySQL</li>
         <li>Create Temperature class</li>
         <li>Add getTemp method on Temperature</li>
+        <li>Add freezer temperature to fridge</li>
+        <li>Add getFreezerTemp method on Temperature</li>
+        <li>Add setTemp method on Temperature</li>
     </ul>
 </div>
 <div>
