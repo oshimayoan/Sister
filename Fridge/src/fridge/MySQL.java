@@ -48,7 +48,7 @@ public class MySQL {
         return null;
     }
     
-    public void close(Connection con) {
+    public Connection close(Connection con) {
         try {
             // menutup koneksi ke database mysql
             if(con != null) {
@@ -58,6 +58,7 @@ public class MySQL {
         } catch(SQLException ex) {
             System.out.println(ex);
         }
+        return con;
     }
     
 }

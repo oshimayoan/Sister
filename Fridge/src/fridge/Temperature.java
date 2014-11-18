@@ -36,7 +36,7 @@ public class Temperature extends MySQL {
         if(con != null) {
             try {
                 String query = "SELECT TemperatureFridge FROM temperature WHERE TemperatureID = 1";
-                stmt = con.prepareStatement(query);
+                stmt = con.createStatement();
                 rs = stmt.executeQuery(query);
                 int temp = 0;
                 if(rs.next())
@@ -45,9 +45,70 @@ public class Temperature extends MySQL {
             } catch(SQLException ex) {
                 System.out.println(ex);
             } finally {
-                close(con);
+                try {
+                    if(con != null)
+                        close(con);
+                    if(stmt != null)
+                        stmt.close();
+                    if(rs != null)
+                        rs.close();
+                } catch(SQLException ex) {
+                    System.out.println(ex);
+                }
             }
         }
         return 0;
     }
+    
+    public int getFreezer() {
+        con = connect(con);
+        if(con != null) {
+            try {
+                String query = "SELECT TemperatureFreezer FROM temperature WHERE TemperatureID = 1";
+                stmt = con.createStatement();
+                rs = stmt.executeQuery(query);
+                int temp = 0;
+                if(rs.next())
+                    temp = rs.getInt(1);
+                return temp;
+            } catch(SQLException ex) {
+                System.out.println(ex);
+            } finally {
+                try {
+                    if(con != null)
+                        close(con);
+                    if(stmt != null)
+                        stmt.close();
+                    if(rs != null)
+                        rs.close();
+                } catch(SQLException ex) {
+                    System.out.println(ex);
+                }
+            }
+        }
+        return 0;
+    }
+    
+    public void setTemp(int temp, int freezerTemp) {
+        con = connect(con);
+        if(con != null) {
+            try {
+                String query = "UPDATE temperature SET TemperatureFridge = '" + temp + "', TemperatureFreezer = '" + freezerTemp + "' WHERE TemperatureID = 1";
+                stmt = con.createStatement();
+                stmt.executeUpdate(query);
+            } catch(SQLException ex) {
+                System.out.println(ex);
+            } finally {
+                try {
+                    if(con != null)
+                        close(con);
+                    if(stmt != null)
+                        stmt.close();
+                } catch(SQLException ex) {
+                    System.out.println(ex);
+                }
+            }
+        }
+    }
+    
 }

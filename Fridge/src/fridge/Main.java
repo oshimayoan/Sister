@@ -30,6 +30,7 @@ public class Main extends javax.swing.JFrame{
     public static int temperature;
     public static int freezerTemp;
     public static Thread tempThread;
+    private Temperature tempClass;
     
     // ubah suhu
     public static void changeTemperature() {
@@ -90,7 +91,7 @@ public class Main extends javax.swing.JFrame{
             }
         });
 
-        btnTempMin.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        btnTempMin.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         btnTempMin.setText("-");
         btnTempMin.setEnabled(false);
         btnTempMin.addActionListener(new java.awt.event.ActionListener() {
@@ -99,11 +100,11 @@ public class Main extends javax.swing.JFrame{
             }
         });
 
-        lblTemperature.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        lblTemperature.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         lblTemperature.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblTemperature.setText("0");
 
-        btnTempMax.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        btnTempMax.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         btnTempMax.setText("+");
         btnTempMax.setEnabled(false);
         btnTempMax.addActionListener(new java.awt.event.ActionListener() {
@@ -118,15 +119,26 @@ public class Main extends javax.swing.JFrame{
         btnFreezerMax.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         btnFreezerMax.setText("+");
         btnFreezerMax.setEnabled(false);
+        btnFreezerMax.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFreezerMaxActionPerformed(evt);
+            }
+        });
 
         btnFreezerMin.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         btnFreezerMin.setText("-");
         btnFreezerMin.setEnabled(false);
+        btnFreezerMin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFreezerMinActionPerformed(evt);
+            }
+        });
 
         lblCelcius2.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         lblCelcius2.setText("°C");
 
-        lblFreezer.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        lblFreezer.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        lblFreezer.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblFreezer.setText("0");
 
         lblFreezerTemperature.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
@@ -137,34 +149,32 @@ public class Main extends javax.swing.JFrame{
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(btnSwitch)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 326, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(btnSwitch)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(6, 6, 6)
                         .addComponent(lblFridgeTemperature))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(398, 398, 398)
-                        .addComponent(lblFreezerTemperature)))
+                    .addComponent(lblFreezerTemperature))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lblTemperature, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lblCelcius))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(33, 33, 33)
-                        .addComponent(lblFreezer)
+                        .addComponent(lblFreezer, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lblCelcius2)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(btnTempMin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnFreezerMin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnFreezerMin))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(btnFreezerMax, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnTempMax, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnTempMax))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -199,8 +209,9 @@ public class Main extends javax.swing.JFrame{
                 server.start();
                 
                 // ambil nilai suhu dari database
-                Temperature temp = new Temperature();
-                temperature = temp.getTemp();
+                tempClass = new Temperature();
+                temperature = tempClass.getTemp();
+                freezerTemp = tempClass.getFreezer();
                 
                 this.setTitle("Fridge [" + server.getStatus() + "]");
                 this.btnSwitch.setText("Turn off");
@@ -230,6 +241,9 @@ public class Main extends javax.swing.JFrame{
             // kurangi suhu
             temperature--;
             lblTemperature.setText(Integer.toString(temperature));
+            
+            // update suhu baru ke database
+            tempClass.setTemp(temperature, freezerTemp);
         }
     }//GEN-LAST:event_btnTempMinActionPerformed
 
@@ -239,9 +253,36 @@ public class Main extends javax.swing.JFrame{
             // tambah suhu
             temperature++;
             lblTemperature.setText(Integer.toString(temperature));
+            
+            // update suhu baru ke database
+            tempClass.setTemp(temperature, freezerTemp);
         }
     }//GEN-LAST:event_btnTempMaxActionPerformed
 
+    private void btnFreezerMaxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFreezerMaxActionPerformed
+        // cek apakah suhu freezer < -13
+        if(freezerTemp < -13) {
+            // tambah suhu
+            freezerTemp++;
+            lblFreezer.setText(Integer.toString(freezerTemp));
+            
+            // update suhu baru ke database
+            tempClass.setTemp(temperature, freezerTemp);
+        }
+    }//GEN-LAST:event_btnFreezerMaxActionPerformed
+
+    private void btnFreezerMinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFreezerMinActionPerformed
+        // cek apakah suhu > -21
+        if(freezerTemp > -21) {
+            // kurangi suhu
+            freezerTemp--;
+            lblFreezer.setText(Integer.toString(freezerTemp));
+            
+            // update suhu baru ke database
+            tempClass.setTemp(temperature, freezerTemp);
+        }
+    }//GEN-LAST:event_btnFreezerMinActionPerformed
+    
     /**
      * @param args the command line arguments
      */
