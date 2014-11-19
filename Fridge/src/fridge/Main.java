@@ -38,23 +38,21 @@ public class Main extends javax.swing.JFrame{
     private Temperature tempClass;
     private Item itemClass;
     private DefaultTableModel tbl;
-    private ArrayList<List> itemList;
     
     // ubah suhu
     public static void changeTemperature() {
+        Temperature t = new Temperature();
+        temperature = t.getTemp();
+        freezerTemp = t.getFreezer();
         lblTemperature.setText(Integer.toString(temperature));
         lblFreezer.setText(Integer.toString(freezerTemp));
-    }
-    
-    // ambil suhu untuk client
-    public static int getTemperature() {
-        return Integer.parseInt(lblTemperature.getText());
     }
     
     // refresh list isi kulkas
     private void refreshList() {
         itemClass = new Item();
-        itemList = itemClass.getItems();
+        int numItem = itemClass.getNumItem();
+        Object[][] o = new Object[numItem][2];
                 
         // bersihkan row
         int row = tbl.getRowCount();
@@ -62,12 +60,9 @@ public class Main extends javax.swing.JFrame{
             tbl.removeRow(i);
                 
         // tampilkan list isi kulkas
-        for(List l : itemList) {
-            Object[] o = new Object[2];
-            o[0] = l.getName();
-            o[1] = l.getQuantity();
-            tbl.addRow(o);
-        }
+        o = itemClass.getItems();
+        for(int i = 0; i < numItem; i++)
+            tbl.addRow(o[i]);
     }
     
     public Main() {
@@ -109,9 +104,9 @@ public class Main extends javax.swing.JFrame{
         tblItem = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setMaximumSize(new java.awt.Dimension(600, 600));
-        setMinimumSize(new java.awt.Dimension(600, 600));
-        setPreferredSize(new java.awt.Dimension(600, 600));
+        setMaximumSize(new java.awt.Dimension(600, 400));
+        setMinimumSize(new java.awt.Dimension(600, 400));
+        setPreferredSize(new java.awt.Dimension(600, 400));
         setResizable(false);
 
         lblCelcius.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
@@ -265,7 +260,6 @@ public class Main extends javax.swing.JFrame{
             tblItem.getColumnModel().getColumn(0).setMinWidth(250);
             tblItem.getColumnModel().getColumn(0).setPreferredWidth(300);
             tblItem.getColumnModel().getColumn(0).setMaxWidth(300);
-            tblItem.getColumnModel().getColumn(0).setCellRenderer(null);
             tblItem.getColumnModel().getColumn(1).setMinWidth(100);
         }
 
@@ -278,7 +272,7 @@ public class Main extends javax.swing.JFrame{
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(btnSwitch)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 382, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 326, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(lblFridgeTemperature)
                             .addComponent(lblFreezerTemperature))
@@ -338,8 +332,8 @@ public class Main extends javax.swing.JFrame{
                         .addComponent(itmJeruk, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(itmSusu, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 222, Short.MAX_VALUE))
-                    .addComponent(jScrollPane2))
+                        .addGap(0, 22, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addContainerGap())
         );
 

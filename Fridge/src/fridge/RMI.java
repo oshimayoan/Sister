@@ -25,6 +25,9 @@ import java.rmi.RemoteException;
  * @author Yoan Pratama Putra
  */
 public interface RMI extends Remote {
-    public void setTemperature(int temp) throws RemoteException;
+    public void setTemperature(int temp, int freezer) throws RemoteException;
     public int getTemperature() throws RemoteException;
+    public int getFreezerTemp() throws RemoteException;
+    public Object[][] getItemList() throws RemoteException;
+    public int getNumItem() throws RemoteException;
 }

@@ -30,6 +30,8 @@ public class Fridge extends UnicastRemoteObject implements RMI {
 
     private static String status = null;
     private Registry reg;
+    private Temperature tempClass;
+    private Item itemClass;
     
     public String getStatus() {
         return status;
@@ -43,8 +45,8 @@ public class Fridge extends UnicastRemoteObject implements RMI {
         try {
             reg = LocateRegistry.createRegistry(1099);
             reg.rebind("server", new Fridge());
-            this.status = "Running";
-        } catch(Exception ex) {
+            status = "Running";
+        } catch(RemoteException ex) {
             System.out.println("new : " + ex);
         }
     }
@@ -53,21 +55,40 @@ public class Fridge extends UnicastRemoteObject implements RMI {
         try {
             UnicastRemoteObject.unexportObject(reg, true);
             reg.unbind("server");
-            this.status = null;
+            status = null;
         } catch(Exception ex) {
             System.out.println(ex);
         }
     }
 
     @Override
-    public void setTemperature(int temp) throws RemoteException {
-        System.out.println(temp);
-        Main.temperature = temp;
+    public void setTemperature(int temp, int freezer) throws RemoteException {
+        tempClass = new Temperature();
+        tempClass.setTemp(temp, freezer);
     }
 
     @Override
     public int getTemperature() throws RemoteException {
-        return Main.getTemperature();
+        tempClass = new Temperature();
+        return tempClass.getTemp();
+    }
+
+    @Override
+    public int getFreezerTemp() throws RemoteException {
+        tempClass = new Temperature();
+        return tempClass.getFreezer();
+    }
+
+    @Override
+    public Object[][] getItemList() {
+        itemClass = new Item();
+        return itemClass.getItems();
+    }
+
+    @Override
+    public int getNumItem() throws RemoteException {
+        itemClass = new Item();
+        return itemClass.getNumItem();
     }
     
 }

@@ -18,9 +18,10 @@
 package client;
 
 import fridge.RMI;
-import static java.lang.Thread.sleep;
+import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -34,14 +35,38 @@ public class Main extends javax.swing.JFrame {
     private static RMI rmi = null;
     private static Registry reg = null;
     private static int temperature = 0;
+    private static int freezerTemp = 0;
     private static int connectFlag = 1; // untuk menandakan percobaan pertama atau bukan
+    private static DefaultTableModel tbl;
     
     public Main() {
         initComponents();
         this.setTitle("Client");
+        
+        tbl = (DefaultTableModel)tblItem.getModel();
     }
     
-    public static void ConnectServer() {
+    public static void asyncList() {
+        // ambil list barang dari server
+        try {
+            int numItem = rmi.getNumItem();
+            Object[][] o = new Object[numItem][2];
+            
+            // bersihkan row
+            int row = tbl.getRowCount();
+            for(int i = row - 1; i >= 0; i--)
+                tbl.removeRow(i);
+                
+            // tampilkan isi kulkas
+            o = rmi.getItemList();
+            for(int i = 0; i < numItem; i++)
+                tbl.addRow(o[i]);
+        } catch(RemoteException ex) {
+            System.out.println(ex);
+        }
+    }
+    
+    public static int ConnectServer() {
         try {
             // membuat koneksi ke kulkas
             reg = LocateRegistry.getRegistry("127.0.0.1", 1099);
@@ -53,9 +78,12 @@ public class Main extends javax.swing.JFrame {
             if(connectFlag == 1) {
                 // ambil suhu kulkas saat ini
                 temperature = rmi.getTemperature();
+                freezerTemp = rmi.getFreezerTemp();
                 txtTemperature.setValue(temperature);
+                txtFreezer.setValue(freezerTemp);
                 connectFlag++;
             }
+            return 1;
         } catch(Exception ex) {
             // ubah status menjadi not connected
             lblConnectStatus.setText("Not Connected");
@@ -69,6 +97,7 @@ public class Main extends javax.swing.JFrame {
             
             System.out.println(ex);
         }
+        return 0;
     }
 
     /**
@@ -80,19 +109,30 @@ public class Main extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        btnChange = new javax.swing.JButton();
+        btnApply = new javax.swing.JButton();
         lblCelcius = new javax.swing.JLabel();
         txtTemperature = new javax.swing.JSpinner();
         btnRefreshTemp = new javax.swing.JButton();
+        pnlStatus = new javax.swing.JPanel();
         lblConnectStatus = new javax.swing.JLabel();
+        lblTemperature = new javax.swing.JLabel();
+        txtFreezer = new javax.swing.JSpinner();
+        lblFreezer = new javax.swing.JLabel();
+        lblCelcius2 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblItem = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setMaximumSize(new java.awt.Dimension(400, 350));
+        setMinimumSize(new java.awt.Dimension(400, 350));
+        setPreferredSize(new java.awt.Dimension(400, 350));
+        setResizable(false);
 
-        btnChange.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        btnChange.setText("Change");
-        btnChange.addActionListener(new java.awt.event.ActionListener() {
+        btnApply.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        btnApply.setText("Apply");
+        btnApply.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnChangeActionPerformed(evt);
+                btnApplyActionPerformed(evt);
             }
         });
 
@@ -100,7 +140,7 @@ public class Main extends javax.swing.JFrame {
         lblCelcius.setText("°C");
 
         txtTemperature.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        txtTemperature.setModel(new javax.swing.SpinnerNumberModel(4, -20, 4, 1));
+        txtTemperature.setModel(new javax.swing.SpinnerNumberModel(1, 1, 6, 1));
         txtTemperature.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 txtTemperatureStateChanged(evt);
@@ -115,61 +155,146 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
+        pnlStatus.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+
         lblConnectStatus.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         lblConnectStatus.setText("Not Connected");
+
+        javax.swing.GroupLayout pnlStatusLayout = new javax.swing.GroupLayout(pnlStatus);
+        pnlStatus.setLayout(pnlStatusLayout);
+        pnlStatusLayout.setHorizontalGroup(
+            pnlStatusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlStatusLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lblConnectStatus)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        pnlStatusLayout.setVerticalGroup(
+            pnlStatusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(lblConnectStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+        );
+
+        lblTemperature.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        lblTemperature.setText("Fridge :");
+
+        txtFreezer.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        txtFreezer.setModel(new javax.swing.SpinnerNumberModel(-13, -21, -13, 1));
+        txtFreezer.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                txtFreezerStateChanged(evt);
+            }
+        });
+
+        lblFreezer.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        lblFreezer.setText("Freezer :");
+
+        lblCelcius2.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        lblCelcius2.setText("°C");
+
+        tblItem.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        tblItem.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Name", "Quantity"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.Integer.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(tblItem);
+        if (tblItem.getColumnModel().getColumnCount() > 0) {
+            tblItem.getColumnModel().getColumn(0).setMinWidth(200);
+            tblItem.getColumnModel().getColumn(0).setPreferredWidth(250);
+            tblItem.getColumnModel().getColumn(0).setMaxWidth(250);
+            tblItem.getColumnModel().getColumn(1).setMinWidth(100);
+        }
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap(157, Short.MAX_VALUE)
-                .addComponent(btnRefreshTemp)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtTemperature, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblCelcius)
-                .addGap(5, 5, 5)
-                .addComponent(btnChange)
-                .addContainerGap())
+            .addComponent(pnlStatus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(lblConnectStatus)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 125, Short.MAX_VALUE)
+                        .addComponent(lblFreezer)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtFreezer, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(lblCelcius2)
+                                .addGap(18, 18, 18)
+                                .addComponent(lblTemperature)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtTemperature, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lblCelcius))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGap(10, 10, 10)
+                                .addComponent(btnRefreshTemp)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnApply)))))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnChange)
                     .addComponent(lblCelcius)
                     .addComponent(txtTemperature, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblTemperature)
+                    .addComponent(txtFreezer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblFreezer)
+                    .addComponent(lblCelcius2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnApply)
                     .addComponent(btnRefreshTemp))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 240, Short.MAX_VALUE)
-                .addComponent(lblConnectStatus)
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(pnlStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnChangeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChangeActionPerformed
+    private void btnApplyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnApplyActionPerformed
         // kirim suhu baru ke kulkas
         try {
-            int temp = Integer.parseInt(txtTemperature.getValue().toString());
+            temperature = Integer.parseInt(txtTemperature.getValue().toString());
+            freezerTemp = Integer.parseInt(txtFreezer.getValue().toString());
             try {
-                rmi.setTemperature(temp);
-            } catch(Exception ex) {
+                rmi.setTemperature(temperature, freezerTemp);
+            } catch(RemoteException ex) {
                 System.out.println(ex);
             }
-        } catch(Exception ex) {
+        } catch(NumberFormatException ex) {
             System.out.println(ex);
         }
-    }//GEN-LAST:event_btnChangeActionPerformed
+    }//GEN-LAST:event_btnApplyActionPerformed
 
     private void txtTemperatureStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_txtTemperatureStateChanged
-        // mengubah suhu
+        // mengubah suhu kulkas
         temperature = Integer.parseInt(txtTemperature.getValue().toString());
     }//GEN-LAST:event_txtTemperatureStateChanged
 
@@ -177,11 +302,18 @@ public class Main extends javax.swing.JFrame {
         // refresh suhu dari kulkas
         try {
             temperature = rmi.getTemperature();
+            freezerTemp = rmi.getFreezerTemp();
             txtTemperature.setValue(temperature);
-        } catch(Exception ex) {
+            txtFreezer.setValue(freezerTemp);
+        } catch(RemoteException ex) {
             System.out.println(ex);
         }
     }//GEN-LAST:event_btnRefreshTempActionPerformed
+
+    private void txtFreezerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_txtFreezerStateChanged
+        // mengubah suhu freezer
+        freezerTemp = Integer.parseInt(txtFreezer.getValue().toString());
+    }//GEN-LAST:event_txtFreezerStateChanged
 
     /**
      * @param args the command line arguments
@@ -223,10 +355,17 @@ public class Main extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnChange;
+    private javax.swing.JButton btnApply;
     private javax.swing.JButton btnRefreshTemp;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblCelcius;
+    private javax.swing.JLabel lblCelcius2;
     private static javax.swing.JLabel lblConnectStatus;
+    private javax.swing.JLabel lblFreezer;
+    private javax.swing.JLabel lblTemperature;
+    private javax.swing.JPanel pnlStatus;
+    private static javax.swing.JTable tblItem;
+    private static javax.swing.JSpinner txtFreezer;
     private static javax.swing.JSpinner txtTemperature;
     // End of variables declaration//GEN-END:variables
 }

@@ -26,9 +26,11 @@ public class connectThread extends Thread {
         while(true) {
             try {
                 // cek konektivitas ke kulkas
-                Main.ConnectServer();
+                int con = Main.ConnectServer();
                 sleep(1000);
-            } catch(Exception ex) {
+                
+                if(con > 0) Main.asyncList();
+            } catch(InterruptedException ex) {
                 System.out.println(ex);
             }
         }

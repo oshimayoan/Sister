@@ -21,7 +21,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 
 /**
  *
@@ -31,13 +30,14 @@ public class Item extends MySQL {
     private Connection con = null;
     private Statement stmt = null;
     private ResultSet rs = null;
+    private String query = null;
     
     public void addItem(String itemName) {
         con = connect(con);
         if(con != null) {
             try {
                 // cek apakah ada barang yang sama di kulkas
-                String query = "SELECT count(*) FROM item WHERE ItemName = '" + itemName + "'";
+                query = "SELECT count(*) FROM item WHERE ItemName = '" + itemName + "'";
                 stmt = con.createStatement();
                 rs = stmt.executeQuery(query);
                 int cek = 0;
@@ -74,7 +74,7 @@ public class Item extends MySQL {
         if(con != null) {
             try {
                 // cek sisa barang yang akan dihapus dari database
-                String query = "SELECT ItemQuantity FROM item WHERE ItemName = '" + itemName + "'";
+                query = "SELECT ItemQuantity FROM item WHERE ItemName = '" + itemName + "'";
                 stmt = con.createStatement();
                 rs = stmt.executeQuery(query);
                 int left = 0;
@@ -106,21 +106,25 @@ public class Item extends MySQL {
         }
     }
     
-    public ArrayList getItems() {
+    public Object[][] getItems() {
         con = connect(con);
         if(con != null) {
             try {
-                String query = "SELECT ItemName, ItemQuantity FROM item";
+                // hitung jumlah barang yang ada
+                int numItem = this.getNumItem();
+                
+                // ambil data barang dair kulkas
+                query = "SELECT ItemName, ItemQuantity FROM item";
                 stmt = con.createStatement();
                 rs = stmt.executeQuery(query);
-                ArrayList<List> data = new ArrayList<>();
+                Object[][] o = new Object[numItem][2];
+                int i = 0;
                 while(rs.next()) {
-                    List tmp = new List();
-                    tmp.setName(rs.getString(1));
-                    tmp.setQuantity(rs.getInt(2));
-                    data.add(tmp);
+                    o[i][0] = rs.getString(1);
+                    o[i][1] = rs.getInt(2);
+                    i++;
                 }
-                return data;
+                return o;
             } catch(SQLException ex) {
                 System.out.println(ex);
             } finally {
@@ -137,5 +141,24 @@ public class Item extends MySQL {
             }
         }
         return null;
+    }
+    
+    public int getNumItem() {
+        con = connect(con);
+        if(con != null) {
+            try {
+                // hitung jumlah barang yang ada
+                int numItem = 0;
+                query = "SELECT count(*) FROM item";
+                stmt = con.createStatement();
+                rs = stmt.executeQuery(query);
+                if(rs.next())
+                    numItem = rs.getInt(1);
+                return numItem;
+            } catch(SQLException ex) {
+                System.out.println(ex);
+            }
+        }
+        return 0;
     }
 }

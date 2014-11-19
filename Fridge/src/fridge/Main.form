@@ -4,13 +4,13 @@
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="3"/>
     <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-      <Dimension value="[600, 600]"/>
+      <Dimension value="[600, 400]"/>
     </Property>
     <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-      <Dimension value="[600, 600]"/>
+      <Dimension value="[600, 400]"/>
     </Property>
     <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-      <Dimension value="[600, 600]"/>
+      <Dimension value="[600, 400]"/>
     </Property>
     <Property name="resizable" type="boolean" value="false"/>
   </Properties>
@@ -38,7 +38,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
                       <Component id="btnSwitch" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="382" max="32767" attributes="0"/>
+                      <EmptySpace pref="326" max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="1" attributes="0">
                           <Component id="lblFridgeTemperature" alignment="1" min="-2" max="-2" attributes="0"/>
                           <Component id="lblFreezerTemperature" alignment="1" min="-2" max="-2" attributes="0"/>
@@ -69,7 +69,7 @@
                   </Group>
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="itmSusu" min="-2" pref="190" max="-2" attributes="0"/>
+                          <Component id="itmSusu" alignment="0" min="-2" pref="190" max="-2" attributes="0"/>
                           <Component id="itmTelur" alignment="0" min="-2" pref="190" max="-2" attributes="0"/>
                           <Component id="itmApel" alignment="0" min="-2" pref="190" max="-2" attributes="0"/>
                           <Component id="itmJeruk" alignment="0" min="-2" pref="190" max="-2" attributes="0"/>
@@ -112,9 +112,9 @@
                       <Component id="itmJeruk" min="-2" pref="70" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="itmSusu" min="-2" pref="70" max="-2" attributes="0"/>
-                      <EmptySpace min="0" pref="222" max="32767" attributes="0"/>
+                      <EmptySpace min="0" pref="22" max="32767" attributes="0"/>
                   </Group>
-                  <Component id="jScrollPane2" max="32767" attributes="0"/>
+                  <Component id="jScrollPane2" pref="0" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -356,9 +356,7 @@
                 <Column maxWidth="300" minWidth="250" prefWidth="300" resizable="true">
                   <Title/>
                   <Editor/>
-                  <Renderer editor="org.netbeans.modules.form.ComponentChooserEditor">
-                    <ComponentRef name="null"/>
-                  </Renderer>
+                  <Renderer/>
                 </Column>
                 <Column maxWidth="-1" minWidth="100" prefWidth="-1" resizable="true">
                   <Title/>
