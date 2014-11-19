@@ -1,4 +1,19 @@
 <div>
+    <span><strong>1.0.0</strong> <i>(November 20, 2014)</i></span>
+    <ul>
+        <li>Update client UI</li>
+        <li>Little change to fridge UI</li>
+        <li>Add getFreezerTemp method to RMI and Fridge</li>
+        <li>Add getItemList method to RMI and Fridge</li>
+        <li>Add getNumItem method to RMI and Fridge</li>
+        <li>Change Item getItems from ArrayList to Object</li>
+        <li>Remove getTemperature method from Main fridge</li>
+        <li>Delete List class from fridge</li>
+        <li>Finish fridge and freezer temperature changer functionality</li>
+        <li>Finish client item list viewer functionality</li>
+    </ul>
+</div>
+<div>
     <span><strong>1.0.0</strong> <i>(November 19, 2014)</i></span>
     <ul>
         <li>Update fridge UI</li>
