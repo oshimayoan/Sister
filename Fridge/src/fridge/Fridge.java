@@ -90,5 +90,13 @@ public class Fridge extends UnicastRemoteObject implements RMI {
         itemClass = new Item();
         return itemClass.getNumItem();
     }
+
+    @Override
+    public boolean login(String user, String pass) throws RemoteException {
+        User usr = new User();
+        if(usr.Login(user, pass))
+            return true;
+        return false;
+    }
     
 }

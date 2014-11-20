@@ -19,7 +19,6 @@ package fridge;
 
 import java.awt.event.InputEvent;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -106,7 +105,6 @@ public class Main extends javax.swing.JFrame{
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMaximumSize(new java.awt.Dimension(600, 400));
         setMinimumSize(new java.awt.Dimension(600, 400));
-        setPreferredSize(new java.awt.Dimension(600, 400));
         setResizable(false);
 
         lblCelcius.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N

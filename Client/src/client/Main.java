@@ -22,6 +22,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.security.MessageDigest;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -41,6 +42,7 @@ public class Main extends javax.swing.JFrame {
     private static int connectFlag = 1; // untuk menandakan percobaan pertama atau bukan
     private static DefaultTableModel tbl;
     private static int fail = 0;
+    private static String ip = null;
     
     public Main() {
         initComponents();
@@ -75,7 +77,7 @@ public class Main extends javax.swing.JFrame {
             lblConnectStatus.setText("Connecting...");
             
             // membuat koneksi ke kulkas
-            reg = LocateRegistry.getRegistry("127.0.0.1", 1099);
+            reg = LocateRegistry.getRegistry(ip, 1099);
             rmi = (RMI) reg.lookup("server");
 
             if(connectFlag == 1) {
@@ -109,8 +111,14 @@ public class Main extends javax.swing.JFrame {
             } else {
                 if(fail > 2) {
                     lblConnectStatus.setText("Failed to connect");
-                    dlgConnect.setEnabled(true);
-                    dlgConnect.setVisible(true);
+                    int confirm = JOptionPane.showConfirmDialog(tblItem, "Failed to connect to server. Do you wish to continue?", "Connection failed", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
+                    
+                    // cek konfirmasi apakah "ya" atau "tidak"
+                    if(confirm < 1) {
+                        // lakukan reconnect ke server kulkas
+                        fail = 0;
+                        conThread.setFail(fail);
+                    }
                 }
             }
         }
@@ -126,16 +134,14 @@ public class Main extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        dlgConnect = new javax.swing.JDialog();
-        lblInfo = new javax.swing.JLabel();
-        btnNo = new javax.swing.JButton();
-        btnYes = new javax.swing.JButton();
         dlgLogin = new javax.swing.JDialog();
         lblUser = new javax.swing.JLabel();
         lblPass = new javax.swing.JLabel();
         txtUser = new javax.swing.JTextField();
         btnLogin = new javax.swing.JButton();
         txtPass = new javax.swing.JPasswordField();
+        lblIP = new javax.swing.JLabel();
+        txtIP = new javax.swing.JTextField();
         btnApply = new javax.swing.JButton();
         lblCelcius = new javax.swing.JLabel();
         txtTemperature = new javax.swing.JSpinner();
@@ -149,121 +155,83 @@ public class Main extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         tblItem = new javax.swing.JTable();
 
-        dlgConnect.setTitle("Error");
-        dlgConnect.setEnabled(false);
-        dlgConnect.setMaximumSize(new java.awt.Dimension(340, 120));
-        dlgConnect.setMinimumSize(new java.awt.Dimension(340, 120));
-        dlgConnect.setResizable(false);
-        dlgConnect.setType(java.awt.Window.Type.POPUP);
-        dlgConnect.addWindowListener(new java.awt.event.WindowAdapter() {
+        dlgLogin.setTitle("Login Form");
+        dlgLogin.setLocationByPlatform(true);
+        dlgLogin.setMaximumSize(new java.awt.Dimension(231, 300));
+        dlgLogin.setMinimumSize(new java.awt.Dimension(231, 177));
+        dlgLogin.setPreferredSize(new java.awt.Dimension(231, 300));
+        dlgLogin.setResizable(false);
+        dlgLogin.addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
-                dlgConnectWindowClosing(evt);
+                dlgLoginWindowClosing(evt);
             }
         });
 
-        lblInfo.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        lblInfo.setText("Failed to connect to fridge server. Do you wish to continue?");
-
-        btnNo.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        btnNo.setText("No");
-        btnNo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnNoActionPerformed(evt);
-            }
-        });
-
-        btnYes.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        btnYes.setText("Yes");
-        btnYes.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnYesActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout dlgConnectLayout = new javax.swing.GroupLayout(dlgConnect.getContentPane());
-        dlgConnect.getContentPane().setLayout(dlgConnectLayout);
-        dlgConnectLayout.setHorizontalGroup(
-            dlgConnectLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(dlgConnectLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(lblInfo)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, dlgConnectLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnYes)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnNo)
-                .addContainerGap())
-        );
-        dlgConnectLayout.setVerticalGroup(
-            dlgConnectLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(dlgConnectLayout.createSequentialGroup()
-                .addGap(27, 27, 27)
-                .addComponent(lblInfo)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(dlgConnectLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnNo)
-                    .addComponent(btnYes))
-                .addContainerGap(49, Short.MAX_VALUE))
-        );
-
-        dlgConnect.getAccessibleContext().setAccessibleDescription("");
-        
-        dlgLogin.setMinimumSize(new java.awt.Dimension(356, 168));
-        
         lblUser.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         lblUser.setText("Username");
-        
+
         lblPass.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         lblPass.setText("Password");
-        
+
         txtUser.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        
+
         btnLogin.setText("Login");
         btnLogin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnLoginActionPerformed(evt);
             }
         });
-        
+
         txtPass.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        
+
+        lblIP.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        lblIP.setText("IP Address");
+
+        txtIP.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        txtIP.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtIP.setText("127.0.0.1");
+
         javax.swing.GroupLayout dlgLoginLayout = new javax.swing.GroupLayout(dlgLogin.getContentPane());
         dlgLogin.getContentPane().setLayout(dlgLoginLayout);
         dlgLoginLayout.setHorizontalGroup(
             dlgLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(dlgLoginLayout.createSequentialGroup()
-                .addGap(39, 39, 39)
+                .addContainerGap()
+                .addGroup(dlgLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblUser)
+                    .addComponent(lblPass)
+                    .addComponent(lblIP))
+                .addGap(18, 18, 18)
                 .addGroup(dlgLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(dlgLoginLayout.createSequentialGroup()
-                        .addGroup(dlgLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblUser)
-                            .addComponent(lblPass))
-                        .addGap(88, 88, 88)
-                        .addGroup(dlgLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(txtUser)
-                            .addComponent(txtPass, javax.swing.GroupLayout.DEFAULT_SIZE, 132, Short.MAX_VALUE)))
+                        .addComponent(btnLogin)
+                        .addGap(62, 86, Short.MAX_VALUE))
                     .addGroup(dlgLoginLayout.createSequentialGroup()
-                        .addGap(103, 103, 103)
-                        .addComponent(btnLogin)))
-                .addContainerGap(38, Short.MAX_VALUE))
+                        .addGroup(dlgLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(txtIP, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtPass, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 132, Short.MAX_VALUE)
+                            .addComponent(txtUser, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 132, Short.MAX_VALUE))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         dlgLoginLayout.setVerticalGroup(
             dlgLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, dlgLoginLayout.createSequentialGroup()
-                .addContainerGap(34, Short.MAX_VALUE)
+                .addContainerGap()
                 .addGroup(dlgLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblUser)
-                    .addComponent(txtUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                    .addComponent(txtUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblUser))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(dlgLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblPass)
-                    .addComponent(txtPass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtPass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblPass))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(dlgLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtIP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblIP))
                 .addGap(18, 18, 18)
                 .addComponent(btnLogin)
-                .addGap(33, 33, 33))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMaximumSize(new java.awt.Dimension(400, 350));
@@ -462,19 +430,28 @@ public class Main extends javax.swing.JFrame {
             this.setVisible(true);
             dlgLogin.setVisible(false);
             dlgLogin.setEnabled(false);
+            
+            // jalankan thread koneksi
+            conThread.start();
         }
     }//GEN-LAST:event_btnLoginActionPerformed
+
+    private void dlgLoginWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_dlgLoginWindowClosing
+        // keluar dari aplikasi
+        System.exit(1);
+    }//GEN-LAST:event_dlgLoginWindowClosing
 
     private static int login(){
         try{
             MessageDigest md = MessageDigest.getInstance("SHA1");
             char[] temp = txtPass.getPassword();
             String temp2 = new String(temp);
-            temp2 = temp2 + ":smartrefrigerator";
+//            temp2 = temp2 + ":smartrefrigerator";
             md.update(temp2.getBytes());
             byte[] output = md.digest();
             String temp3 = bytesToHex(output);
-            System.out.println(temp3);
+            ip = txtIP.getText();
+            
             if(txtUser.getText().equals("user") && temp2.equals("user")){
                 return 1;
             }
@@ -494,28 +471,6 @@ public class Main extends javax.swing.JFrame {
         }
         return buf.toString();
     }
-
-    private void btnNoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNoActionPerformed
-        // kembali ke app
-        dlgConnect.setVisible(false);
-        dlgConnect.setEnabled(false);
-    }//GEN-LAST:event_btnNoActionPerformed
-
-    private void btnYesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnYesActionPerformed
-        // lakukan reconnect ke server kulkas
-        fail = 0;
-        conThread.setFail(fail);
-        
-        // kembali ke app
-        dlgConnect.setVisible(false);
-        dlgConnect.setEnabled(false);
-    }//GEN-LAST:event_btnYesActionPerformed
-
-    private void dlgConnectWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_dlgConnectWindowClosing
-        // keluar ke app
-        dlgConnect.setVisible(false);
-        dlgConnect.setEnabled(false);
-    }//GEN-LAST:event_dlgConnectWindowClosing
 
     /**
      * @param args the command line arguments
@@ -547,12 +502,12 @@ public class Main extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
+//                new Main().setVisible(true);
                 new Main().setEnabled(false);
                 dlgLogin.setVisible(true);
                 
-                // buat dan jalankan thread koneksi
+                // buat thread koneksi
                 conThread = new connectThread();
-                conThread.start();
             }
         });
     }
@@ -560,23 +515,21 @@ public class Main extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnApply;
     private javax.swing.JButton btnLogin;
-    private javax.swing.JButton btnNo;
     private javax.swing.JButton btnRefreshTemp;
     private static javax.swing.JDialog dlgLogin;
-    private javax.swing.JButton btnYes;
-    private static javax.swing.JDialog dlgConnect;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblCelcius;
     private javax.swing.JLabel lblCelcius2;
     private static javax.swing.JLabel lblConnectStatus;
     private javax.swing.JLabel lblFreezer;
+    private javax.swing.JLabel lblIP;
     private javax.swing.JLabel lblPass;
-    private javax.swing.JLabel lblInfo;
     private javax.swing.JLabel lblTemperature;
     private javax.swing.JLabel lblUser;
     private javax.swing.JPanel pnlStatus;
     private static javax.swing.JTable tblItem;
     private static javax.swing.JSpinner txtFreezer;
+    private static javax.swing.JTextField txtIP;
     private static javax.swing.JPasswordField txtPass;
     private static javax.swing.JSpinner txtTemperature;
     private static javax.swing.JTextField txtUser;

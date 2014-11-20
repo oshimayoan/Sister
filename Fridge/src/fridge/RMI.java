@@ -30,4 +30,5 @@ public interface RMI extends Remote {
     public int getFreezerTemp() throws RemoteException;
     public Object[][] getItemList() throws RemoteException;
     public int getNumItem() throws RemoteException;
+    public boolean login(String user, String pass) throws RemoteException;
 }
