@@ -38,18 +38,30 @@ public class User extends MySQL {
         con = connect(con);
         if(con != null) {
             try {
-                // ambil data barang dari kulkas
-                query = "SELECT UserName, UserPassword FROM user WHERE UserID";
+                // ambil data user dari kulkas
+                query = "SELECT UserName, UserPassword FROM user WHERE UserID = 1";
                 stmt = con.createStatement();
                 rs = stmt.executeQuery(query);
                 if(rs.next()) {
                     this.user = rs.getString(1);
                     this.pass = rs.getString(2);
                 }
+
                 if(this.user.equals(a) & this.pass.equals(b))
                     return true;
             } catch(SQLException ex) {
                 System.out.println(ex);
+            } finally {
+                try {
+                    if(con != null)
+                        close(con);
+                    if(stmt != null)
+                        stmt.close();
+                    if(rs != null)
+                        rs.close();
+                } catch(SQLException ex) {
+                    System.out.println(ex);
+                }
             }
         }
         return false;

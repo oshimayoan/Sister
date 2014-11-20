@@ -157,6 +157,17 @@ public class Item extends MySQL {
                 return numItem;
             } catch(SQLException ex) {
                 System.out.println(ex);
+            } finally {
+                try {
+                    if(con != null)
+                        close(con);
+                    if(stmt != null)
+                        stmt.close();
+                    if(rs != null)
+                        rs.close();
+                } catch(SQLException ex) {
+                    System.out.println(ex);
+                }
             }
         }
         return 0;

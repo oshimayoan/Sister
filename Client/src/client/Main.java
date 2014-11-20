@@ -27,7 +27,7 @@ import javax.swing.table.DefaultTableModel;
 
 /**
  *
- * @author Yoan Pratama Putra
+ * @author Yoan Pratama Putra, Ritos Penyawang
  */
 public class Main extends javax.swing.JFrame {
 
@@ -75,6 +75,7 @@ public class Main extends javax.swing.JFrame {
         try {            
             // ubah status menjadi connecting
             lblConnectStatus.setText("Connecting...");
+            dlgLogin.setTitle("Connecting...");
             
             // membuat koneksi ke kulkas
             reg = LocateRegistry.getRegistry(ip, 1099);
@@ -105,12 +106,22 @@ public class Main extends javax.swing.JFrame {
         } finally {
             // ubah status menjadi connected
             if(rmi != null) {
+                // ubah status menjadi connected
                 lblConnectStatus.setText("Connected");
+                dlgLogin.setTitle("Connected");
+                
+                // ubah fail kembali menjadi 0 untuk melakukan reconnect
                 fail = 0;
+                
+                // kirim nilai fail yang baru
                 conThread.setFail(fail);
             } else {
                 if(fail > 2) {
+                    // ubah status menjadi failed to connect
                     lblConnectStatus.setText("Failed to connect");
+                    dlgLogin.setTitle("Failed to connect");
+                    
+                    // tampilkan dialog konfirmasi reconnect
                     int confirm = JOptionPane.showConfirmDialog(tblItem, "Failed to connect to server. Do you wish to continue?", "Connection failed", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
                     
                     // cek konfirmasi apakah "ya" atau "tidak"
@@ -157,9 +168,7 @@ public class Main extends javax.swing.JFrame {
 
         dlgLogin.setTitle("Login Form");
         dlgLogin.setLocationByPlatform(true);
-        dlgLogin.setMaximumSize(new java.awt.Dimension(231, 300));
         dlgLogin.setMinimumSize(new java.awt.Dimension(231, 177));
-        dlgLogin.setPreferredSize(new java.awt.Dimension(231, 300));
         dlgLogin.setResizable(false);
         dlgLogin.addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
@@ -430,9 +439,6 @@ public class Main extends javax.swing.JFrame {
             this.setVisible(true);
             dlgLogin.setVisible(false);
             dlgLogin.setEnabled(false);
-            
-            // jalankan thread koneksi
-            conThread.start();
         }
     }//GEN-LAST:event_btnLoginActionPerformed
 
@@ -446,15 +452,15 @@ public class Main extends javax.swing.JFrame {
             MessageDigest md = MessageDigest.getInstance("SHA1");
             char[] temp = txtPass.getPassword();
             String temp2 = new String(temp);
-//            temp2 = temp2 + ":smartrefrigerator";
+            temp2 = temp2 + ":smartrefrigerator";
             md.update(temp2.getBytes());
             byte[] output = md.digest();
             String temp3 = bytesToHex(output);
             ip = txtIP.getText();
             
-            if(txtUser.getText().equals("user") && temp2.equals("user")){
+            if(rmi.login(txtUser.getText(), temp3.toLowerCase()))
                 return 1;
-            }
+
         } catch(Exception e) {
             System.out.println("Exception: "+e);
         }
@@ -508,6 +514,9 @@ public class Main extends javax.swing.JFrame {
                 
                 // buat thread koneksi
                 conThread = new connectThread();
+                
+                // jalankan thread koneksi
+                conThread.start();
             }
         });
     }
