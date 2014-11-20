@@ -14,6 +14,10 @@
         <li>Change client connection failure detector</li>
         <li>Create client connection failure handler</li>
         <li>Create User class</li>
+        <li>Add log-in dialog</li>
+        <li>Add login method to RMI and Fridge</li>
+        <li>Fix connection failure handler dialog</li>
+        <li>Fix login dialog event and UI</li>
     </ul>
 </div>
 <div>
