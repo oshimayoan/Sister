@@ -21,6 +21,7 @@ import fridge.RMI;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.security.MessageDigest;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -129,6 +130,12 @@ public class Main extends javax.swing.JFrame {
         lblInfo = new javax.swing.JLabel();
         btnNo = new javax.swing.JButton();
         btnYes = new javax.swing.JButton();
+        dlgLogin = new javax.swing.JDialog();
+        lblUser = new javax.swing.JLabel();
+        lblPass = new javax.swing.JLabel();
+        txtUser = new javax.swing.JTextField();
+        btnLogin = new javax.swing.JButton();
+        txtPass = new javax.swing.JPasswordField();
         btnApply = new javax.swing.JButton();
         lblCelcius = new javax.swing.JLabel();
         txtTemperature = new javax.swing.JSpinner();
@@ -201,6 +208,62 @@ public class Main extends javax.swing.JFrame {
         );
 
         dlgConnect.getAccessibleContext().setAccessibleDescription("");
+        
+        dlgLogin.setMinimumSize(new java.awt.Dimension(356, 168));
+        
+        lblUser.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        lblUser.setText("Username");
+        
+        lblPass.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        lblPass.setText("Password");
+        
+        txtUser.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        
+        btnLogin.setText("Login");
+        btnLogin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLoginActionPerformed(evt);
+            }
+        });
+        
+        txtPass.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        
+        javax.swing.GroupLayout dlgLoginLayout = new javax.swing.GroupLayout(dlgLogin.getContentPane());
+        dlgLogin.getContentPane().setLayout(dlgLoginLayout);
+        dlgLoginLayout.setHorizontalGroup(
+            dlgLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(dlgLoginLayout.createSequentialGroup()
+                .addGap(39, 39, 39)
+                .addGroup(dlgLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(dlgLoginLayout.createSequentialGroup()
+                        .addGroup(dlgLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblUser)
+                            .addComponent(lblPass))
+                        .addGap(88, 88, 88)
+                        .addGroup(dlgLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(txtUser)
+                            .addComponent(txtPass, javax.swing.GroupLayout.DEFAULT_SIZE, 132, Short.MAX_VALUE)))
+                    .addGroup(dlgLoginLayout.createSequentialGroup()
+                        .addGap(103, 103, 103)
+                        .addComponent(btnLogin)))
+                .addContainerGap(38, Short.MAX_VALUE))
+        );
+        dlgLoginLayout.setVerticalGroup(
+            dlgLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, dlgLoginLayout.createSequentialGroup()
+                .addContainerGap(34, Short.MAX_VALUE)
+                .addGroup(dlgLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblUser)
+                    .addComponent(txtUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(dlgLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblPass)
+                    .addComponent(txtPass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(btnLogin)
+                .addGap(33, 33, 33))
+        );
+
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMaximumSize(new java.awt.Dimension(400, 350));
@@ -392,6 +455,45 @@ public class Main extends javax.swing.JFrame {
         // mengubah suhu freezer
         freezerTemp = Integer.parseInt(txtFreezer.getValue().toString());
     }//GEN-LAST:event_txtFreezerStateChanged
+    
+    private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
+        if(login() == 1){
+            this.setEnabled(true);
+            this.setVisible(true);
+            dlgLogin.setVisible(false);
+            dlgLogin.setEnabled(false);
+        }
+    }//GEN-LAST:event_btnLoginActionPerformed
+
+    private static int login(){
+        try{
+            MessageDigest md = MessageDigest.getInstance("SHA1");
+            char[] temp = txtPass.getPassword();
+            String temp2 = new String(temp);
+            temp2 = temp2 + ":smartrefrigerator";
+            md.update(temp2.getBytes());
+            byte[] output = md.digest();
+            String temp3 = bytesToHex(output);
+            System.out.println(temp3);
+            if(txtUser.getText().equals("user") && temp2.equals("user")){
+                return 1;
+            }
+        } catch(Exception e) {
+            System.out.println("Exception: "+e);
+        }
+        return 0;
+    }
+
+    public static String bytesToHex(byte[] b) {
+        char hexDigit[] = {'0', '1', '2', '3', '4', '5', '6', '7',
+                            '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
+        StringBuffer buf = new StringBuffer();
+        for (int j=0; j<b.length; j++) {
+            buf.append(hexDigit[(b[j] >> 4) & 0x0f]);
+            buf.append(hexDigit[b[j] & 0x0f]);
+        }
+        return buf.toString();
+    }
 
     private void btnNoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNoActionPerformed
         // kembali ke app
@@ -445,7 +547,8 @@ public class Main extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Main().setVisible(true);
+                new Main().setEnabled(false);
+                dlgLogin.setVisible(true);
                 
                 // buat dan jalankan thread koneksi
                 conThread = new connectThread();
@@ -456,8 +559,10 @@ public class Main extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnApply;
+    private javax.swing.JButton btnLogin;
     private javax.swing.JButton btnNo;
     private javax.swing.JButton btnRefreshTemp;
+    private static javax.swing.JDialog dlgLogin;
     private javax.swing.JButton btnYes;
     private static javax.swing.JDialog dlgConnect;
     private javax.swing.JScrollPane jScrollPane1;
@@ -465,11 +570,15 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JLabel lblCelcius2;
     private static javax.swing.JLabel lblConnectStatus;
     private javax.swing.JLabel lblFreezer;
+    private javax.swing.JLabel lblPass;
     private javax.swing.JLabel lblInfo;
     private javax.swing.JLabel lblTemperature;
+    private javax.swing.JLabel lblUser;
     private javax.swing.JPanel pnlStatus;
     private static javax.swing.JTable tblItem;
     private static javax.swing.JSpinner txtFreezer;
+    private static javax.swing.JPasswordField txtPass;
     private static javax.swing.JSpinner txtTemperature;
+    private static javax.swing.JTextField txtUser;
     // End of variables declaration//GEN-END:variables
 }
