@@ -34,10 +34,12 @@ public class Main extends javax.swing.JFrame {
      */
     private static RMI rmi = null;
     private static Registry reg = null;
+    private static connectThread conThread = null;
     private static int temperature = 0;
     private static int freezerTemp = 0;
     private static int connectFlag = 1; // untuk menandakan percobaan pertama atau bukan
     private static DefaultTableModel tbl;
+    private static int fail = 0;
     
     public Main() {
         initComponents();
@@ -46,7 +48,7 @@ public class Main extends javax.swing.JFrame {
         tbl = (DefaultTableModel)tblItem.getModel();
     }
     
-    public static void asyncList() {
+    public static void refreshList() {
         // ambil list barang dari server
         try {
             int numItem = rmi.getNumItem();
@@ -66,14 +68,14 @@ public class Main extends javax.swing.JFrame {
         }
     }
     
-    public static int ConnectServer() {
-        try {
+    public static boolean ConnectServer() {
+        try {            
+            // ubah status menjadi connecting
+            lblConnectStatus.setText("Connecting...");
+            
             // membuat koneksi ke kulkas
             reg = LocateRegistry.getRegistry("127.0.0.1", 1099);
             rmi = (RMI) reg.lookup("server");
-                
-            // ubah status menjadi connected
-            lblConnectStatus.setText("Connected");
 
             if(connectFlag == 1) {
                 // ambil suhu kulkas saat ini
@@ -83,11 +85,8 @@ public class Main extends javax.swing.JFrame {
                 txtFreezer.setValue(freezerTemp);
                 connectFlag++;
             }
-            return 1;
+            return true;
         } catch(Exception ex) {
-            // ubah status menjadi not connected
-            lblConnectStatus.setText("Not Connected");
-            
             // unset reg dan rmi
             reg = null;
             rmi = null;
@@ -95,9 +94,26 @@ public class Main extends javax.swing.JFrame {
             // kembalikan nilai connectFlag ke 1
             connectFlag = 1;
             
+            // tambah penghitung fail
+            fail++;
+            conThread.setFail(fail);
+            
             System.out.println(ex);
+        } finally {
+            // ubah status menjadi connected
+            if(rmi != null) {
+                lblConnectStatus.setText("Connected");
+                fail = 0;
+                conThread.setFail(fail);
+            } else {
+                if(fail > 2) {
+                    lblConnectStatus.setText("Failed to connect");
+                    dlgConnect.setEnabled(true);
+                    dlgConnect.setVisible(true);
+                }
+            }
         }
-        return 0;
+        return false;
     }
 
     /**
@@ -109,6 +125,10 @@ public class Main extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        dlgConnect = new javax.swing.JDialog();
+        lblInfo = new javax.swing.JLabel();
+        btnNo = new javax.swing.JButton();
+        btnYes = new javax.swing.JButton();
         btnApply = new javax.swing.JButton();
         lblCelcius = new javax.swing.JLabel();
         txtTemperature = new javax.swing.JSpinner();
@@ -122,10 +142,69 @@ public class Main extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         tblItem = new javax.swing.JTable();
 
+        dlgConnect.setTitle("Error");
+        dlgConnect.setEnabled(false);
+        dlgConnect.setMaximumSize(new java.awt.Dimension(340, 120));
+        dlgConnect.setMinimumSize(new java.awt.Dimension(340, 120));
+        dlgConnect.setResizable(false);
+        dlgConnect.setType(java.awt.Window.Type.POPUP);
+        dlgConnect.addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                dlgConnectWindowClosing(evt);
+            }
+        });
+
+        lblInfo.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        lblInfo.setText("Failed to connect to fridge server. Do you wish to continue?");
+
+        btnNo.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        btnNo.setText("No");
+        btnNo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNoActionPerformed(evt);
+            }
+        });
+
+        btnYes.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        btnYes.setText("Yes");
+        btnYes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnYesActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout dlgConnectLayout = new javax.swing.GroupLayout(dlgConnect.getContentPane());
+        dlgConnect.getContentPane().setLayout(dlgConnectLayout);
+        dlgConnectLayout.setHorizontalGroup(
+            dlgConnectLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(dlgConnectLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lblInfo)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, dlgConnectLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnYes)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnNo)
+                .addContainerGap())
+        );
+        dlgConnectLayout.setVerticalGroup(
+            dlgConnectLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(dlgConnectLayout.createSequentialGroup()
+                .addGap(27, 27, 27)
+                .addComponent(lblInfo)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(dlgConnectLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnNo)
+                    .addComponent(btnYes))
+                .addContainerGap(49, Short.MAX_VALUE))
+        );
+
+        dlgConnect.getAccessibleContext().setAccessibleDescription("");
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMaximumSize(new java.awt.Dimension(400, 350));
         setMinimumSize(new java.awt.Dimension(400, 350));
-        setPreferredSize(new java.awt.Dimension(400, 350));
         setResizable(false);
 
         btnApply.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
@@ -237,7 +316,6 @@ public class Main extends javax.swing.JFrame {
                         .addComponent(lblFreezer)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtFreezer, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addComponent(lblCelcius2)
@@ -315,6 +393,28 @@ public class Main extends javax.swing.JFrame {
         freezerTemp = Integer.parseInt(txtFreezer.getValue().toString());
     }//GEN-LAST:event_txtFreezerStateChanged
 
+    private void btnNoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNoActionPerformed
+        // kembali ke app
+        dlgConnect.setVisible(false);
+        dlgConnect.setEnabled(false);
+    }//GEN-LAST:event_btnNoActionPerformed
+
+    private void btnYesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnYesActionPerformed
+        // lakukan reconnect ke server kulkas
+        fail = 0;
+        conThread.setFail(fail);
+        
+        // kembali ke app
+        dlgConnect.setVisible(false);
+        dlgConnect.setEnabled(false);
+    }//GEN-LAST:event_btnYesActionPerformed
+
+    private void dlgConnectWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_dlgConnectWindowClosing
+        // keluar ke app
+        dlgConnect.setVisible(false);
+        dlgConnect.setEnabled(false);
+    }//GEN-LAST:event_dlgConnectWindowClosing
+
     /**
      * @param args the command line arguments
      */
@@ -348,7 +448,7 @@ public class Main extends javax.swing.JFrame {
                 new Main().setVisible(true);
                 
                 // buat dan jalankan thread koneksi
-                connectThread conThread = new connectThread();
+                conThread = new connectThread();
                 conThread.start();
             }
         });
@@ -356,12 +456,16 @@ public class Main extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnApply;
+    private javax.swing.JButton btnNo;
     private javax.swing.JButton btnRefreshTemp;
+    private javax.swing.JButton btnYes;
+    private static javax.swing.JDialog dlgConnect;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblCelcius;
     private javax.swing.JLabel lblCelcius2;
     private static javax.swing.JLabel lblConnectStatus;
     private javax.swing.JLabel lblFreezer;
+    private javax.swing.JLabel lblInfo;
     private javax.swing.JLabel lblTemperature;
     private javax.swing.JPanel pnlStatus;
     private static javax.swing.JTable tblItem;

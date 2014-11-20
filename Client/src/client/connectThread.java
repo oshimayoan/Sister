@@ -22,14 +22,19 @@ package client;
  * @author Yoan Pratama Putra
  */
 public class connectThread extends Thread {
+    private static int fail = 0; // penanda berapa kali gagal konek ke server kulkas
+    public void setFail(int a) {
+        fail = a;
+    }
     public void run() {
         while(true) {
             try {
-                // cek konektivitas ke kulkas
-                int con = Main.ConnectServer();
-                sleep(1000);
+                // cek konektivitas ke kulkas selama fail != 3*T
+                if(fail < 3)
+                    if(Main.ConnectServer())
+                        Main.refreshList();
                 
-                if(con > 0) Main.asyncList();
+                sleep(1000);
             } catch(InterruptedException ex) {
                 System.out.println(ex);
             }
