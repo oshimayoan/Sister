@@ -11,6 +11,9 @@
         <li>Delete List class from fridge</li>
         <li>Finish fridge and freezer temperature changer functionality</li>
         <li>Finish client item list viewer functionality</li>
+        <li>Change client connection failure detector</li>
+        <li>Create client connection failure handler</li>
+        <li>Create User class</li>
     </ul>
 </div>
 <div>
