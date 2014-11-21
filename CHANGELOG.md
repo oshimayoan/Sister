@@ -2,6 +2,7 @@
     <span><strong>1.0.0</strong> <i>(November 21, 2014)</i></span>
     <ul>
         <li>Fix client login authentication</li>
+        <li>Fix fridge server</li>
     </ul>
 </div>
 <div>
